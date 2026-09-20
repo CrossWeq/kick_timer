@@ -183,8 +183,6 @@
         }
 
         // Pusher & Kick Event Dinleme
-        // Sadece kanal puan odulu (channel_points_redemption) ile tetiklenir
-        // Normal chat mesajlari tetiklemez
         if (chatroomId && chatroomId !== 'unknown') {
             const pusher = new Pusher('32cbd69e4b950bf97679', {
                 cluster: 'us2',
@@ -192,9 +190,9 @@
             });
 
             const kickChannel = pusher.subscribe('chatrooms.' + chatroomId + '.v2');
-            console.log('Kick chatroom subscribe edildi: chatrooms.' + chatroomId + '.v2');
+            console.log('[KickTimer] Chatroom subscribe edildi: chatrooms.' + chatroomId + '.v2');
 
-            // Sadece ChatMessageEvent dinle - reward redemption icin
+            // Tum ChatMessageEvent'leri dinle
             kickChannel.bind('App\\Events\\ChatMessageEvent', function(rawData) {
                 if (!triggerWord) return;
                 try {
@@ -204,27 +202,36 @@
                     if (!eventData) return;
 
                     const msgType = (eventData.type || '').toLowerCase();
-                    const metaType = ((eventData.metadata || {}).original_message || {}).metadata || {};
-                    const metaMsgType = (metaType.type || '').toLowerCase();
                     const content = (eventData.content || '').toLowerCase();
 
-                    console.log('[Event] type:', msgType, 'metaType:', metaMsgType, 'content:', content);
+                    // Normal chat mesajlarini (type = "message") atla
+                    // Odüller, sistem mesajlari gibi her seyi gecir
+                    if (msgType === 'message') {
+                        return; // Normal chat - tetikleme
+                    }
 
-                    // ODULE OZGU: mesaj tipi channel_points_redemption ise tetikle
-                    const isReward = (msgType === 'channel_points_redemption') || (metaMsgType === 'channel_points_redemption');
-                    if (isReward && content.includes(triggerWord)) {
-                        console.log('[ODUL TETIKLENDI]', content);
+                    // Reward veya baska tip ise: trigger kelimesi varsa tetikle
+                    if (content.includes(triggerWord)) {
+                        console.log('[KickTimer] ODUL TETIKLENDI! type=' + msgType + ' content=' + content);
                         triggerAddDuration();
                     }
                 } catch(e) {
-                    console.error('Event parse error', e);
+                    console.error('[KickTimer] Event parse error', e);
                 }
             });
 
-            // Debug: Tum eventleri goster (konsol loguna yaz, tetiklemez)
+            // Tum eventleri logla (debug icin - tetiklemez)
             kickChannel.bind_global(function(eventName, data) {
                 if (eventName.startsWith('pusher:')) return;
-                console.log('[Kick Event]', eventName, data);
+                try {
+                    let parsed = data;
+                    if (typeof data === 'string') parsed = JSON.parse(data);
+                    const t = (parsed && parsed.type) ? parsed.type : '?';
+                    const c = (parsed && parsed.content) ? parsed.content : '';
+                    console.log('[KickTimer Event] ' + eventName + ' | type=' + t + ' | content=' + c);
+                } catch(e) {
+                    console.log('[KickTimer Event] ' + eventName, data);
+                }
             });
         }
     </script>
