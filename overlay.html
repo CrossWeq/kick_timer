@@ -204,15 +204,22 @@
                     const msgType = (eventData.type || '').toLowerCase();
                     const content = (eventData.content || '').toLowerCase();
 
-                    // Normal chat mesajlarini (type = "message") atla
-                    // Odüller, sistem mesajlari gibi her seyi gecir
+                    const containsTrigger = content.includes(triggerWord);
+                    const containsOdulTxt = content.includes('ödülünü aldı') || content.includes('redeemed');
+
                     if (msgType === 'message') {
-                        return; // Normal chat - tetikleme
+                        // Eger normal mesajsa, kullanicilarin chate yazmasini engellemek icin
+                        // Sadece icinde hem trigger hem de "ödülünü aldı" (sistem mesaji sablonu) geciyorsa kabul et
+                        if (containsTrigger && containsOdulTxt) {
+                            console.log('[KickTimer] ODUL TETIKLENDI (Chat Uzerinden)! content=' + content);
+                            triggerAddDuration();
+                        }
+                        return;
                     }
 
-                    // Reward veya baska tip ise: trigger kelimesi varsa tetikle
-                    if (content.includes(triggerWord)) {
-                        console.log('[KickTimer] ODUL TETIKLENDI! type=' + msgType + ' content=' + content);
+                    // Reward veya baska tip (sistem eventi) ise sadece trigger kelimesi yeterli
+                    if (containsTrigger) {
+                        console.log('[KickTimer] ODUL TETIKLENDI (Event Uzerinden)! type=' + msgType + ' content=' + content);
                         triggerAddDuration();
                     }
                 } catch(e) {
@@ -223,15 +230,7 @@
             // Tum eventleri logla (debug icin - tetiklemez)
             kickChannel.bind_global(function(eventName, data) {
                 if (eventName.startsWith('pusher:')) return;
-                try {
-                    let parsed = data;
-                    if (typeof data === 'string') parsed = JSON.parse(data);
-                    const t = (parsed && parsed.type) ? parsed.type : '?';
-                    const c = (parsed && parsed.content) ? parsed.content : '';
-                    console.log('[KickTimer Event] ' + eventName + ' | type=' + t + ' | content=' + c);
-                } catch(e) {
-                    console.log('[KickTimer Event] ' + eventName, data);
-                }
+                // sessizce logla
             });
         }
     </script>
