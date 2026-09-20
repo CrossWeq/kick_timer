@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kick Zamanlay??c?? Kurulumu</title>
+    <title>Kick Zamanlayıcı Kurulumu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@400;600&family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -48,15 +48,15 @@
     <div class="glass rounded-2xl w-full max-w-xl p-8">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-green-400 mb-2">Kick Timer Overlay</h1>
-            <p class="text-gray-300 text-sm">OBS i??in sadakat puan?? ile ??al????an zamanlay??c?? kayna????</p>
+            <p class="text-gray-300 text-sm">OBS için sadakat puanı ile çalışan zamanlayıcı kaynağı</p>
         </div>
 
-        <!-- Ad??m 1 -->
+        <!-- Adım 1 -->
         <div id="step1" class="step active">
             <h2 class="text-xl font-semibold mb-4 text-green-300">1. Kanal Bilgisi</h2>
             <div class="mb-4">
-                <label class="block text-sm text-gray-300 mb-2">Kick Kanal Ad??</label>
-                <input type="text" id="channelInput" placeholder="??rn: crossweq" class="w-full p-3 rounded-lg input-field" oninput="onChannelInput()">
+                <label class="block text-sm text-gray-300 mb-2">Kick Kanal Adı</label>
+                <input type="text" id="channelInput" placeholder="Örn: crossweq" class="w-full p-3 rounded-lg input-field" oninput="onChannelInput()">
             </div>
             <button onclick="validateChannel()" id="btnStep1" class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors flex justify-center items-center">
                 <span>Devam Et</span>
@@ -65,16 +65,16 @@
             <p id="channelError" class="text-red-400 text-sm mt-2 hidden"></p>
         </div>
 
-        <!-- Ad??m 2 -->
+        <!-- Adım 2 -->
         <div id="step2" class="step">
-            <h2 class="text-xl font-semibold mb-4 text-green-300">2. Tetikleyici ve S??re</h2>
+            <h2 class="text-xl font-semibold mb-4 text-green-300">2. Tetikleyici ve Süre</h2>
             <div class="mb-4">
-                <label class="block text-sm text-gray-300 mb-2">Tetikleyici ??d??l veya Mesaj Ad??</label>
-                <input type="text" id="triggerInput" placeholder="??rn: Susturma" class="w-full p-3 rounded-lg input-field">
-                <p class="text-xs text-gray-400 mt-1">Chat'te veya sistem mesaj??nda bu kelime/c??mle ge??ti??inde s??re eklenir.</p>
+                <label class="block text-sm text-gray-300 mb-2">Tetikleyici Ödül veya Mesaj Adı</label>
+                <input type="text" id="triggerInput" placeholder="Örn: Susturma" class="w-full p-3 rounded-lg input-field">
+                <p class="text-xs text-gray-400 mt-1">Chat'te veya sistem mesajında bu kelime/cümle geçtiğinde süre eklenir.</p>
             </div>
             <div class="mb-6">
-                <label class="block text-sm text-gray-300 mb-2">Eklenecek S??re (Dakika)</label>
+                <label class="block text-sm text-gray-300 mb-2">Eklenecek Süre (Dakika)</label>
                 <input type="number" id="durationInput" value="1" min="1" class="w-full p-3 rounded-lg input-field">
             </div>
             <div class="flex gap-4">
@@ -83,15 +83,15 @@
             </div>
         </div>
 
-        <!-- Ad??m 3 -->
+        <!-- Adım 3 -->
         <div id="step3" class="step">
-            <h2 class="text-xl font-semibold mb-4 text-green-300">3. Tasar??m Ayarlar??</h2>
+            <h2 class="text-xl font-semibold mb-4 text-green-300">3. Tasarım Ayarları</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <div class="mb-4">
-                        <label class="block text-sm text-gray-300 mb-2">??st Metin</label>
-                        <input type="text" id="topTextInput" value="Konu??ma yasa????n??n bitmesine" oninput="updatePreview()" class="w-full p-2 rounded-lg input-field">
+                        <label class="block text-sm text-gray-300 mb-2">Üst Metin</label>
+                        <input type="text" id="topTextInput" value="Konuşma yasağının bitmesine" oninput="updatePreview()" class="w-full p-2 rounded-lg input-field">
                     </div>
                     
                     <div class="mb-4">
@@ -111,14 +111,14 @@
 
                     <div class="mb-4 flex items-center">
                         <input type="checkbox" id="borderInput" onchange="updatePreview()" class="w-5 h-5 accent-green-500 cursor-pointer">
-                        <label class="ml-2 text-sm text-gray-300">D???? ??er??eve (Stroke) Ekle</label>
+                        <label class="ml-2 text-sm text-gray-300">Dış Çerçeve (Stroke) Ekle</label>
                     </div>
                 </div>
 
                 <div class="glass rounded-lg preview-box">
-                    <p class="text-xs text-gray-400 mb-2 w-full text-left">Canl?? ??nizleme:</p>
+                    <p class="text-xs text-gray-400 mb-2 w-full text-left">Canlı Önizleme:</p>
                     <div id="previewContainer" class="text-center font-bold" style="font-family: 'Inter'; color: #53ff53;">
-                        <div id="previewTopText" class="text-lg opacity-90 mb-1">Konu??ma yasa????n??n bitmesine</div>
+                        <div id="previewTopText" class="text-lg opacity-90 mb-1">Konuşma yasağının bitmesine</div>
                         <div id="previewTimer" class="text-5xl tracking-wider">00:01:00</div>
                     </div>
                 </div>
@@ -126,16 +126,16 @@
 
             <div class="flex gap-4 mt-6">
                 <button onclick="prevStep(2)" class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
-                <button onclick="generateLink()" class="w-2/3 bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors">Ba??lant?? Olu??tur</button>
+                <button onclick="generateLink()" class="w-2/3 bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors">Bağlantı Oluştur</button>
             </div>
         </div>
 
-        <!-- Sonu?? -->
+        <!-- Sonuç -->
         <div id="step4" class="step">
-            <h2 class="text-2xl font-bold mb-4 text-green-400 text-center">Kurulum Tamamland??!</h2>
+            <h2 class="text-2xl font-bold mb-4 text-green-400 text-center">Kurulum Tamamlandı!</h2>
             
             <div class="bg-black bg-opacity-50 p-4 rounded-lg mb-4 border border-green-500 border-opacity-30">
-                <p class="text-sm text-gray-300 mb-2">Bu linki OBS'te <strong class="text-white">Browser Source (Taray??c?? Kayna????)</strong> olarak ekleyin:</p>
+                <p class="text-sm text-gray-300 mb-2">Bu linki OBS'te <strong class="text-white">Browser Source (Tarayıcı Kaynağı)</strong> olarak ekleyin:</p>
                 <div class="flex">
                     <input type="text" id="finalLink" readonly class="w-full p-2 rounded-l-lg input-field text-sm font-mono text-gray-400" onclick="this.select()">
                     <button onclick="copyLink()" class="bg-green-500 hover:bg-green-600 text-black px-4 rounded-r-lg font-semibold transition-colors">Kopyala</button>
@@ -143,17 +143,17 @@
             </div>
 
             <div class="bg-blue-900 bg-opacity-40 p-4 rounded-lg border border-blue-500 border-opacity-30 flex items-start gap-3">
-                <div class="text-blue-400 text-xl mt-1">??????</div>
+                <div class="text-blue-400 text-xl mt-1">ℹ️</div>
                 <div class="text-sm text-blue-100">
-                    <p class="font-semibold mb-1">??nemli OBS Ayarlar??:</p>
+                    <p class="font-semibold mb-1">Önemli OBS Ayarları:</p>
                     <ul class="list-disc pl-4 space-y-1">
-                        <li>OBS'te kayna???? eklerken <strong>"Sesi OBS ??zerinden kontrol et"</strong> (Control audio via OBS) se??ene??ini kesinlikle i??aretleyin.</li>
-                        <li>Geni??lik: 800, Y??kseklik: 300 tavsiye edilir.</li>
+                        <li>OBS'te kaynağı eklerken <strong>"Sesi OBS üzerinden kontrol et"</strong> (Control audio via OBS) seçeneğini kesinlikle işaretleyin.</li>
+                        <li>Genişlik: 800, Yükseklik: 300 tavsiye edilir.</li>
                     </ul>
                 </div>
             </div>
 
-            <button onclick="location.reload()" class="w-full mt-6 bg-transparent border border-gray-500 hover:bg-gray-800 text-white font-bold py-2 rounded-lg transition-colors">Yeni Zamanlay??c?? Olu??tur</button>
+            <button onclick="location.reload()" class="w-full mt-6 bg-transparent border border-gray-500 hover:bg-gray-800 text-white font-bold py-2 rounded-lg transition-colors">Yeni Zamanlayıcı Oluştur</button>
         </div>
 
     </div>
@@ -196,7 +196,7 @@
             const statusEl = document.getElementById('channelStatus');
             const errorEl = document.getElementById('channelError');
             const btn = document.getElementById('btnStep1');
-            statusEl.textContent = 'Kick kanal?? kontrol ediliyor...';
+            statusEl.textContent = 'Kick kanalı kontrol ediliyor...';
             statusEl.classList.remove('hidden');
             errorEl.classList.add('hidden');
             btn.disabled = true;
@@ -205,7 +205,7 @@
                 'https://kick.com/api/v1/channels/' + channel,
                 'https://corsproxy.io/?url=' + encodeURIComponent('https://kick.com/api/v1/channels/' + channel),
                 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://kick.com/api/v1/channels/' + channel),
-                'https://api.codetabs.com/v1/proxy?quest=https://kick.com/api/v1/channels/' + channel
+                'https://api.codetabs.com/v1/proxy?quest=https://kick.com/api/v2/channels/' + channel + '/chatroom'
             ];
             let foundChatroomId = null;
             for (const url of apiTargets) {
@@ -225,10 +225,10 @@
             btn.classList.remove('opacity-50', 'cursor-not-allowed');
             if (foundChatroomId) {
                 chatroomId = foundChatroomId;
-                btn.innerHTML = '<span>Devam Et ???</span>';
+                btn.innerHTML = '<span>Devam Et ✓</span>';
                 btn.classList.add('bg-green-400');
             } else {
-                errorEl.textContent = 'Kick kanal?? bulunamad??. Harf hatas?? yapm???? olabilirsiniz.';
+                errorEl.textContent = 'Kick kanalı bulunamadı. Harf hatası yapmış olabilirsiniz.';
                 errorEl.classList.remove('hidden');
                 chatroomId = '';
             }
@@ -238,7 +238,7 @@
             const channel = document.getElementById('channelInput').value.trim();
             const errorEl = document.getElementById('channelError');
             if (!channel) {
-                errorEl.textContent = 'L??tfen kanal ad??n?? girin.';
+                errorEl.textContent = 'Lütfen kanal adını girin.';
                 errorEl.classList.remove('hidden');
                 return;
             }
@@ -274,7 +274,7 @@
             const channel = document.getElementById('channelInput').value.trim();
             const trigger = document.getElementById('triggerInput').value.trim();
             const duration = document.getElementById('durationInput').value;
-            if(!trigger) { alert('L??tfen tetikleyici ad??n?? girin!'); prevStep(2); return; }
+            if(!trigger) { alert('Lütfen tetikleyici adını girin!'); prevStep(2); return; }
             const topText = document.getElementById('topTextInput').value;
             const font = document.getElementById('fontInput').value;
             const color = document.getElementById('colorInput').value.replace('#', '');
@@ -299,7 +299,7 @@
             document.execCommand('copy');
             const btn = event.target;
             const originalText = btn.textContent;
-            btn.textContent = 'Kopyaland??!';
+            btn.textContent = 'Kopyalandı!';
             btn.classList.replace('bg-green-500', 'bg-blue-500');
             setTimeout(() => {
                 btn.textContent = originalText;
