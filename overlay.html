@@ -183,31 +183,49 @@
         }
 
         // Pusher & Kick Event Dinleme
-        if (chatroomId || channelName) {
+        // Sadece kanal puan odulu (channel_points_redemption) ile tetiklenir
+        // Normal chat mesajlari tetiklemez
+        if (chatroomId && chatroomId !== 'unknown') {
             const pusher = new Pusher('32cbd69e4b950bf97679', {
                 cluster: 'us2',
                 forceTLS: true
             });
 
-            // Global olarak her event'i dinle.
-            // Bu şekilde Kick'in kendi sadakat puanı vs (App\Events\GiftedSubscriptionsEvent, vs) hepsini yakalayabiliriz.
-            pusher.bind_global((eventName, data) => {
+            const kickChannel = pusher.subscribe('chatrooms.' + chatroomId + '.v2');
+            console.log('Kick chatroom subscribe edildi: chatrooms.' + chatroomId + '.v2');
+
+            // Sadece ChatMessageEvent dinle - reward redemption icin
+            kickChannel.bind('App\\Events\\ChatMessageEvent', function(rawData) {
                 if (!triggerWord) return;
-                
                 try {
-                    const dataStr = typeof data === 'string' ? data : JSON.stringify(data);
-                    if (dataStr.toLowerCase().includes(triggerWord)) {
+                    let eventData = rawData;
+                    if (typeof rawData === 'string') eventData = JSON.parse(rawData);
+                    if (eventData && typeof eventData.data === 'string') eventData = JSON.parse(eventData.data);
+                    if (!eventData) return;
+
+                    const msgType = (eventData.type || '').toLowerCase();
+                    const metaType = ((eventData.metadata || {}).original_message || {}).metadata || {};
+                    const metaMsgType = (metaType.type || '').toLowerCase();
+                    const content = (eventData.content || '').toLowerCase();
+
+                    console.log('[Event] type:', msgType, 'metaType:', metaMsgType, 'content:', content);
+
+                    // ODULE OZGU: mesaj tipi channel_points_redemption ise tetikle
+                    const isReward = (msgType === 'channel_points_redemption') || (metaMsgType === 'channel_points_redemption');
+                    if (isReward && content.includes(triggerWord)) {
+                        console.log('[ODUL TETIKLENDI]', content);
                         triggerAddDuration();
                     }
                 } catch(e) {
-                    console.error("Event parse error", e);
+                    console.error('Event parse error', e);
                 }
             });
 
-            // Eğer chatroomId varsa ilgili kanala subscribe ol
-            if (chatroomId && chatroomId !== "unknown") {
-                pusher.subscribe(`chatrooms.${chatroomId}.v2`);
-            }
+            // Debug: Tum eventleri goster (konsol loguna yaz, tetiklemez)
+            kickChannel.bind_global(function(eventName, data) {
+                if (eventName.startsWith('pusher:')) return;
+                console.log('[Kick Event]', eventName, data);
+            });
         }
     </script>
 </body>
