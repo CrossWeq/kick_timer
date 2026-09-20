@@ -69,6 +69,11 @@
         <div id="step2" class="step">
             <h2 class="text-xl font-semibold mb-4 text-green-300">2. Tetikleyici ve Süre</h2>
             <div class="mb-4">
+                <label class="block text-sm text-gray-300 mb-2">İzin Verilen Kullanıcılar (Virgülle Ayırın)</label>
+                <input type="text" id="allowedUsersInput" value="botrix, crossweq" class="w-full p-3 rounded-lg input-field">
+                <p class="text-xs text-gray-400 mt-1 mb-4">Sadece bu kişilerin yazdığı komutlar geçerli olur. Boş bırakırsanız herkes kullanabilir.</p>
+            </div>
+            <div class="mb-4">
                 <label class="block text-sm text-gray-300 mb-2">Tetikleyici Ödül veya Mesaj Adı</label>
                 <input type="text" id="triggerInput" placeholder="Örn: Susturma" class="w-full p-3 rounded-lg input-field">
                 <p class="text-xs text-gray-400 mt-1">Chat'te veya sistem mesajında bu kelime/cümle geçtiğinde süre eklenir.</p>
@@ -273,6 +278,7 @@
         function generateLink() {
             const channel = document.getElementById('channelInput').value.trim();
             const trigger = document.getElementById('triggerInput').value.trim();
+            const allowed = document.getElementById('allowedUsersInput').value.trim();
             const duration = document.getElementById('durationInput').value;
             if(!trigger) { alert('Lütfen tetikleyici adını girin!'); prevStep(2); return; }
             const topText = document.getElementById('topTextInput').value;
@@ -284,6 +290,7 @@
             url.searchParams.set('chatroom_id', chatroomId);
             if (window._kickChannelId) url.searchParams.set('channel_id', window._kickChannelId);
             url.searchParams.set('trigger', trigger);
+            if (allowed) url.searchParams.set('allowed', allowed);
             url.searchParams.set('duration', duration);
             url.searchParams.set('text', topText);
             url.searchParams.set('font', font);
