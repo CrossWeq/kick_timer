@@ -263,12 +263,13 @@
             const topText = document.getElementById('topTextInput').value;
             const font = document.getElementById('fontInput').value;
             const opacity = document.getElementById('opacityInput').value;
-            const opacity = document.getElementById('opacityInput').value;
             document.getElementById('opacityValue').textContent = Math.round(opacity * 100) + '%';
+            
+            // previewContainer tanimini yukari tasimak gerekiyor
+            const previewContainer = document.getElementById('previewContainer');
             previewContainer.style.opacity = opacity;
             const color = document.getElementById('colorInput').value;
             const hasBorder = document.getElementById('borderInput').checked;
-            const previewContainer = document.getElementById('previewContainer');
             const previewTopText = document.getElementById('previewTopText');
             const durationVal = parseInt(document.getElementById('durationInput').value) || 1;
             const durationStr = String(durationVal).padStart(2, '0');
@@ -292,9 +293,6 @@
             const topText = document.getElementById('topTextInput').value;
             const font = document.getElementById('fontInput').value;
             const opacity = document.getElementById('opacityInput').value;
-            const opacity = document.getElementById('opacityInput').value;
-            document.getElementById('opacityValue').textContent = Math.round(opacity * 100) + '%';
-            previewContainer.style.opacity = opacity;
             const color = document.getElementById('colorInput').value.replace('#', '');
             const hasBorder = document.getElementById('borderInput').checked;
             const url = new URL('overlay.html', window.location.href);
