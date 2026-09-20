@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Kick Event Tester</title>
+<title>Kick Event Tester V2</title>
 <script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
 <style>
 body { background: #111; color: #0f0; font-family: monospace; padding: 20px; }
@@ -15,7 +15,7 @@ h1 { color: #53ff53; }
 </style>
 </head>
 <body>
-<h1>Kick Event Tester</h1>
+<h1>Kick Event Tester V2</h1>
 <p>Chatroom ID'ni gir, Bağlan'a bas, sonra Kick'te odülü kullan ve ne geldiğini gör.</p>
 <input type="text" id="roomId" placeholder="Chatroom ID (örn: 26915392)" value="26915392">
 <button onclick="connect()">Bağlan</button>
@@ -38,29 +38,37 @@ function connect() {
     }
 
     const pusher = new Pusher('32cbd69e4b950bf97679', { cluster: 'us2', forceTLS: true });
-    const ch = pusher.subscribe('chatrooms.' + chatroomId + '.v2');
     
-    addLog('Subscribe edildi: chatrooms.' + chatroomId + '.v2', false);
+    // Subscribe to multiple possible channels
+    const channels = [
+        pusher.subscribe('chatrooms.' + chatroomId + '.v2'),
+        pusher.subscribe('channel.' + chatroomId),
+        pusher.subscribe('chatrooms.' + chatroomId)
+    ];
+    
+    addLog('Tüm olası kanallara bağlanıldı (chatrooms, channel, vb.)', false);
 
-    ch.bind_global(function(eventName, rawData) {
-        if (eventName.startsWith('pusher:')) return;
-        
-        try {
-            let data = rawData;
-            if (typeof rawData === 'string') data = JSON.parse(rawData);
-            if (data && typeof data.data === 'string') data = JSON.parse(data.data);
+    channels.forEach(ch => {
+        ch.bind_global(function(eventName, rawData) {
+            if (eventName.startsWith('pusher:')) return;
             
-            const type = (data && data.type) ? data.type : '(yok)';
-            const content = (data && data.content) ? data.content : '(yok)';
-            const sender = (data && data.sender && data.sender.username) ? data.sender.username : '(yok)';
-            
-            const isNotMessage = type !== 'message';
-            const summary = 'EVENT: ' + eventName + ' | type: ' + type + ' | sender: ' + sender + ' | content: ' + content;
-            addLog(summary, isNotMessage);
-            
-        } catch(e) {
-            addLog('EVENT: ' + eventName + ' | RAW: ' + JSON.stringify(rawData), false);
-        }
+            try {
+                let data = rawData;
+                if (typeof rawData === 'string') data = JSON.parse(rawData);
+                if (data && typeof data.data === 'string') data = JSON.parse(data.data);
+                
+                const type = (data && data.type) ? data.type : '(yok)';
+                const content = (data && data.content) ? data.content : '(yok)';
+                const sender = (data && data.sender && data.sender.username) ? data.sender.username : '(yok)';
+                
+                const isNotMessage = type !== 'message';
+                const summary = 'CH: ' + ch.name + ' | EV: ' + eventName + ' | type: ' + type + ' | sender: ' + sender + ' | content: ' + content;
+                addLog(summary, isNotMessage);
+                
+            } catch(e) {
+                addLog('CH: ' + ch.name + ' | EV: ' + eventName + ' | RAW: ' + JSON.stringify(rawData), false);
+            }
+        });
     });
 }
 </script>
