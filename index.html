@@ -1,344 +1,344 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kick Zamanlayıcı Kurulumu</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@400;600&family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            color: white;
-            min-height: 100vh;
-            font-family: 'Inter', sans-serif;
-        }
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        }
-        .step { display: none; opacity: 0; transition: opacity 0.3s ease; }
-        .step.active { display: block; opacity: 1; }
-        .input-field {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            transition: all 0.3s;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: #53ff53;
-            box-shadow: 0 0 10px rgba(83, 255, 83, 0.2);
-        }
-        .preview-box {
-            background-color: transparent;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-    </style>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@600&family=Pacifico&family=Press+Start+2P&family=Teko:wght@600&display=swap" rel="stylesheet">
-</head>
-<body class="flex items-center justify-center p-4">
-
-    <div class="glass rounded-2xl w-full max-w-xl p-8">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-green-400 mb-2">Kick Timer Overlay</h1>
-            <p class="text-gray-300 text-sm">OBS için sohbet komutuyla çalışan modüler zamanlayıcı</p>
-        </div>
-
-        <!-- Adım 1 -->
-        <div id="step1" class="step active">
-            <h2 class="text-xl font-semibold mb-4 text-green-300">1. Kanal Bilgisi</h2>
-            <div class="mb-4">
-                <label class="block text-sm text-gray-300 mb-2">Kick Kanal Adı</label>
-                <input type="text" id="channelInput" placeholder="Örn: crossweq" class="w-full p-3 rounded-lg input-field" oninput="onChannelInput()">
-            </div>
-            <button onclick="validateChannel()" id="btnStep1" class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors flex justify-center items-center">
-                <span>Devam Et</span>
-            </button>
-            <p id="channelStatus" class="text-yellow-400 text-sm mt-2 hidden"></p>
-            <p id="channelError" class="text-red-400 text-sm mt-2 hidden"></p>
-        </div>
-
-        <!-- Adım 2 -->
-        <div id="step2" class="step">
-            <h2 class="text-xl font-semibold mb-4 text-green-300">2. Tetikleyici ve Süre</h2>
-            <div class="mb-4">
-                <label class="block text-sm text-gray-300 mb-2">İzin Verilen Kullanıcılar (Virgülle Ayırın)</label>
-                <input type="text" id="allowedUsersInput" value="botrix, crossweq" class="w-full p-3 rounded-lg input-field">
-                <p class="text-xs text-gray-400 mt-1 mb-4">Sadece bu kişilerin yazdığı komutlar geçerli olur. Boş bırakırsanız herkes kullanabilir.</p>
-            </div>
-            <div class="mb-4">
-                <label class="block text-sm text-gray-300 mb-2">Tetikleyici Komut</label>
-                <input type="text" id="triggerInput" value="!sus" placeholder="Örn: !sus" class="w-full p-3 rounded-lg input-field">
-                <p class="text-xs text-gray-400 mt-1">Chat'te veya sistem mesajında bu kelime/cümle geçtiğinde süre eklenir.</p>
-            </div>
-            <div class="mb-6">
-                <label class="block text-sm text-gray-300 mb-2">Eklenecek Süre (Dakika)</label>
-                <input type="number" id="durationInput" value="1" min="1" class="w-full p-3 rounded-lg input-field">
-            </div>
-            <div class="flex gap-4">
-                <button onclick="prevStep(1)" class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
-                <button onclick="nextStep(3)" class="w-2/3 bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors">Devam Et</button>
-            </div>
-        </div>
-
-        <!-- Adım 3 -->
-        <div id="step3" class="step">
-            <h2 class="text-xl font-semibold mb-4 text-green-300">3. Tasarım Ayarları</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <div class="mb-4">
-                        <label class="block text-sm text-gray-300 mb-2">Üst Metin</label>
-                        <input type="text" id="topTextInput" value="Konuşma yasağının bitmesine" oninput="updatePreview()" class="w-full p-2 rounded-lg input-field">
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label class="block text-sm text-gray-300 mb-2">Font</label>
-                        <select id="fontInput" onchange="updatePreview()" class="w-full p-3 rounded-lg input-field">
-                            <option value="'Fredoka', sans-serif">Fredoka (Varsayılan Normal)</option>
-                            <option value="Impact">Impact (Kalın)</option>
-                            <option value="'Bangers', cursive">Bangers (Çizgi Roman/Aksiyon)</option>
-                            <option value="'Press Start 2P', cursive">Retro Pixel (8-bit Oyun)</option>
-                            <option value="'Teko', sans-serif">Teko (Modern Keskin)</option>
-                            <option value="'Pacifico', cursive">Pacifico (El Yazısı)</option>
-                            <option value="'Comic Sans MS', cursive">Comic Sans (Klasik)</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm text-gray-300 mb-2">Renk</label>
-                        <input type="color" id="colorInput" value="#53ff53" oninput="updatePreview()" class="w-full h-10 rounded-lg cursor-pointer bg-transparent border-0 p-0">
-                    </div>
-
-                                        <div class="mb-4">
-                        <label class="block text-sm text-gray-300 mb-2">Transparanlık (Görünürlük)</label>
-                        <div class="flex items-center gap-4">
-                            <input type="range" id="opacityInput" min="0.1" max="1.0" step="0.1" value="1.0" oninput="updatePreview()" class="w-full accent-green-500">
-                            <span id="opacityValue" class="text-xs text-gray-400 font-mono w-8">100%</span>
-                        </div>
-                    </div>
-                    <div class="mb-4 flex items-center">
-                        <input type="checkbox" id="borderInput" onchange="updatePreview()" class="w-5 h-5 accent-green-500 cursor-pointer">
-                        <label class="ml-2 text-sm text-gray-300">Dış Çerçeve (Stroke) Ekle</label>
-                    </div>
-                </div>
-
-                <div class="glass rounded-lg preview-box">
-                    <p class="text-xs text-gray-400 mb-2 w-full text-left">Canlı Önizleme:</p>
-                    <div id="previewContainer" class="text-center font-bold" style="font-family: 'Inter'; color: #53ff53;">
-                        <div id="previewTopText" class="text-lg opacity-90 mb-1">Konuşma yasağının bitmesine</div>
-                        <div id="previewTimer" class="text-5xl tracking-wider">00:01:00</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex gap-4 mt-6">
-                <button onclick="prevStep(2)" class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
-                <button onclick="generateLink()" class="w-2/3 bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors">Bağlantı Oluştur</button>
-            </div>
-        </div>
-
-        <!-- Sonuç -->
-        <div id="step4" class="step">
-            <h2 class="text-2xl font-bold mb-4 text-green-400 text-center">Kurulum Tamamlandı!</h2>
-            
-            <div class="bg-black bg-opacity-50 p-4 rounded-lg mb-4 border border-green-500 border-opacity-30">
-                <p class="text-sm text-gray-300 mb-2">Bu linki OBS'te <strong class="text-white">Browser Source (Tarayıcı Kaynağı)</strong> olarak ekleyin:</p>
-                <div class="flex">
-                    <input type="text" id="finalLink" readonly class="w-full p-2 rounded-l-lg input-field text-sm font-mono text-gray-400" onclick="this.select()">
-                    <button onclick="copyLink()" class="bg-green-500 hover:bg-green-600 text-black px-4 rounded-r-lg font-semibold transition-colors">Kopyala</button>
-                </div>
-            </div>
-
-            <div class="bg-blue-900 bg-opacity-40 p-4 rounded-lg border border-blue-500 border-opacity-30 flex items-start gap-3">
-                <div class="text-blue-400 text-xl mt-1">ℹ️</div>
-                <div class="text-sm text-blue-100">
-                    <p class="font-semibold mb-1">Önemli OBS Ayarları:</p>
-                    <ul class="list-disc pl-4 space-y-1">
-                        <li>OBS'te kaynağı eklerken <strong>"Sesi OBS üzerinden kontrol et"</strong> (Control audio via OBS) seçeneğini kesinlikle işaretleyin.</li>
-                        <li>Genişlik: 800, Yükseklik: 300 tavsiye edilir.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <button onclick="location.reload()" class="w-full mt-6 bg-transparent border border-gray-500 hover:bg-gray-800 text-white font-bold py-2 rounded-lg transition-colors">Yeni Zamanlayıcı Oluştur</button>
-        </div>
-
-    </div>
-
-    <script>
-        let chatroomId = '';
-        let channelCheckTimer = null;
-
-        function showStep(step) {
-            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-            document.getElementById('step' + step).classList.add('active');
-        }
-
-        function nextStep(step) {
-            showStep(step);
-            if(step === 3) updatePreview();
-        }
-
-        function prevStep(step) {
-            showStep(step);
-        }
-
-        function onChannelInput() {
-            const channel = document.getElementById('channelInput').value.trim();
-            const statusEl = document.getElementById('channelStatus');
-            const errorEl = document.getElementById('channelError');
-            const btn = document.getElementById('btnStep1');
-            errorEl.classList.add('hidden');
-            statusEl.classList.add('hidden');
-            chatroomId = '';
-            btn.disabled = false;
-            btn.innerHTML = '<span>Devam Et</span>';
-            btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-green-400');
-            if (!channel) return;
-            if (channelCheckTimer) clearTimeout(channelCheckTimer);
-            channelCheckTimer = setTimeout(() => { checkChannel(channel); }, 700);
-        }
-
-        async function checkChannel(channel) {
-            const statusEl = document.getElementById('channelStatus');
-            const errorEl = document.getElementById('channelError');
-            const btn = document.getElementById('btnStep1');
-            statusEl.textContent = 'Kick kanalı kontrol ediliyor...';
-            statusEl.classList.remove('hidden');
-            errorEl.classList.add('hidden');
-            btn.disabled = true;
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
-            const apiTargets = [
-                'https://kick.com/api/v1/channels/' + channel,
-                'https://corsproxy.io/?url=' + encodeURIComponent('https://kick.com/api/v1/channels/' + channel),
-                'https://api.allorigins.win/get?url=' + encodeURIComponent('https://kick.com/api/v1/channels/' + channel),
-                'https://api.codetabs.com/v1/proxy?quest=https://kick.com/api/v2/channels/' + channel + '/chatroom'
-            ];
-            let foundChatroomId = null;
-            for (const url of apiTargets) {
-                try {
-                    const ctrl = new AbortController();
-                    const tid = setTimeout(() => ctrl.abort(), 7000);
-                    const res = await fetch(url, { signal: ctrl.signal });
-                    clearTimeout(tid);
-                    if (res.status === 404) break;
-                    const raw = await res.json();
-                    const data = raw.contents ? JSON.parse(raw.contents) : raw;
-                    if (data && data.chatroom && data.chatroom.id) { foundChatroomId = data.chatroom.id; window._kickChannelId = data.id; break; }
-                } catch (e) { continue; }
-            }
-            statusEl.classList.add('hidden');
-            btn.disabled = false;
-            btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            if (foundChatroomId) {
-                chatroomId = foundChatroomId;
-                btn.innerHTML = '<span>Devam Et ✓</span>';
-                btn.classList.add('bg-green-400');
-            } else {
-                errorEl.textContent = 'Kick kanalı bulunamadı. Harf hatası yapmış olabilirsiniz.';
-                errorEl.classList.remove('hidden');
-                chatroomId = '';
-            }
-        }
-
-        async function validateChannel() {
-            const channel = document.getElementById('channelInput').value.trim();
-            const errorEl = document.getElementById('channelError');
-            if (!channel) {
-                errorEl.textContent = 'Lütfen kanal adını girin.';
-                errorEl.classList.remove('hidden');
-                return;
-            }
-            if (chatroomId) { nextStep(2); return; }
-            const statusEl = document.getElementById('channelStatus');
-            if (statusEl.classList.contains('hidden') && errorEl.classList.contains('hidden')) {
-                await checkChannel(channel);
-                if (chatroomId) nextStep(2);
-            }
-        }
-
-        function updatePreview() {
-            const topText = document.getElementById('topTextInput').value;
-            const font = document.getElementById('fontInput').value;
-            const opacity = document.getElementById('opacityInput').value;
-            document.getElementById('opacityValue').textContent = Math.round(opacity * 100) + '%';
-            
-            // previewContainer tanimini yukari tasimak gerekiyor
-            const previewContainer = document.getElementById('previewContainer');
-            previewContainer.style.opacity = opacity;
-            const color = document.getElementById('colorInput').value;
-            const hasBorder = document.getElementById('borderInput').checked;
-            const previewTopText = document.getElementById('previewTopText');
-            const durationVal = parseInt(document.getElementById('durationInput').value) || 1;
-            const durationStr = String(durationVal).padStart(2, '0');
-            document.getElementById('previewTimer').textContent = '00:' + durationStr + ':00';
-            previewTopText.textContent = topText;
-            previewContainer.style.fontFamily = font;
-            previewContainer.style.color = color;
-            
-            if (font.includes('Press Start 2P')) {
-                previewTopText.style.fontSize = '0.5rem';
-                previewTimer.style.fontSize = '1.5rem';
-            } else {
-                previewTopText.style.fontSize = '1.25rem'; 
-                previewTimer.style.fontSize = '3.5rem';
-            }
-            if (hasBorder) {
-                previewContainer.style.textShadow = '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 10px rgba(0,0,0,0.5)';
-            } else {
-                previewContainer.style.textShadow = '0 4px 10px rgba(0,0,0,0.5)';
-            }
-        }
-
-        function generateLink() {
-            const channel = document.getElementById('channelInput').value.trim();
-            const trigger = document.getElementById('triggerInput').value.trim();
-            const allowed = document.getElementById('allowedUsersInput').value.trim();
-            const duration = document.getElementById('durationInput').value;
-            if(!trigger) { alert('Lütfen tetikleyici adını girin!'); prevStep(2); return; }
-            const topText = document.getElementById('topTextInput').value;
-            const font = document.getElementById('fontInput').value;
-            const opacity = document.getElementById('opacityInput').value;
-            const color = document.getElementById('colorInput').value.replace('#', '');
-            const hasBorder = document.getElementById('borderInput').checked;
-            const url = new URL('overlay.html', window.location.href);
-            url.searchParams.set('channel', channel);
-            url.searchParams.set('chatroom_id', chatroomId);
-            if (window._kickChannelId) url.searchParams.set('channel_id', window._kickChannelId);
-            url.searchParams.set('trigger', trigger);
-            if (allowed) url.searchParams.set('allowed', allowed);
-            url.searchParams.set('duration', duration);
-            url.searchParams.set('text', topText);
-            url.searchParams.set('font', font);
-            if (opacity !== '1.0' && opacity !== '1') url.searchParams.set('opacity', opacity);
-            url.searchParams.set('color', color);
-            url.searchParams.set('border', hasBorder ? '1' : '0');
-            document.getElementById('finalLink').value = url.href;
-            showStep(4);
-        }
-
-        function copyLink() {
-            const linkInput = document.getElementById('finalLink');
-            linkInput.select();
-            document.execCommand('copy');
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = 'Kopyalandı!';
-            btn.classList.replace('bg-green-500', 'bg-blue-500');
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.classList.replace('bg-blue-500', 'bg-green-500');
-            }, 2000);
-        }
-    </script>
-</body>
-</html>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kick Zamanlayıcı Kurulumu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@400;600&family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: white;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        .step { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .step.active { display: block; opacity: 1; }
+        .input-field {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #53ff53;
+            box-shadow: 0 0 10px rgba(83, 255, 83, 0.2);
+        }
+        .preview-box {
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+    </style>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@600&family=Pacifico&family=Press+Start+2P&family=Teko:wght@600&display=swap" rel="stylesheet">
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div class="glass rounded-2xl w-full max-w-xl p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-green-400 mb-2">Kick Timer Overlay</h1>
+            <p class="text-gray-300 text-sm">OBS için sohbet komutuyla çalışan modüler zamanlayıcı</p>
+        </div>
+
+        <!-- Adım 1 -->
+        <div id="step1" class="step active">
+            <h2 class="text-xl font-semibold mb-4 text-green-300">1. Kanal Bilgisi</h2>
+            <div class="mb-4">
+                <label class="block text-sm text-gray-300 mb-2">Kick Kanal Adı</label>
+                <input type="text" id="channelInput" placeholder="Örn: crossweq" class="w-full p-3 rounded-lg input-field" oninput="onChannelInput()">
+            </div>
+            <button onclick="validateChannel()" id="btnStep1" class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors flex justify-center items-center">
+                <span>Devam Et</span>
+            </button>
+            <p id="channelStatus" class="text-yellow-400 text-sm mt-2 hidden"></p>
+            <p id="channelError" class="text-red-400 text-sm mt-2 hidden"></p>
+        </div>
+
+        <!-- Adım 2 -->
+        <div id="step2" class="step">
+            <h2 class="text-xl font-semibold mb-4 text-green-300">2. Tetikleyici ve Süre</h2>
+            <div class="mb-4">
+                <label class="block text-sm text-gray-300 mb-2">İzin Verilen Kullanıcılar (Virgülle Ayırın)</label>
+                <input type="text" id="allowedUsersInput" value="botrix, crossweq" class="w-full p-3 rounded-lg input-field">
+                <p class="text-xs text-gray-400 mt-1 mb-4">Sadece bu kişilerin yazdığı komutlar geçerli olur. Boş bırakırsanız herkes kullanabilir.</p>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm text-gray-300 mb-2">Tetikleyici Komut</label>
+                <input type="text" id="triggerInput" value="!sus" placeholder="Örn: !sus" class="w-full p-3 rounded-lg input-field">
+                <p class="text-xs text-gray-400 mt-1">Chat'te veya sistem mesajında bu kelime/cümle geçtiğinde süre eklenir.</p>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm text-gray-300 mb-2">Eklenecek Süre (Dakika)</label>
+                <input type="number" id="durationInput" value="1" min="1" class="w-full p-3 rounded-lg input-field">
+            </div>
+            <div class="flex gap-4">
+                <button onclick="prevStep(1)" class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
+                <button onclick="nextStep(3)" class="w-2/3 bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors">Devam Et</button>
+            </div>
+        </div>
+
+        <!-- Adım 3 -->
+        <div id="step3" class="step">
+            <h2 class="text-xl font-semibold mb-4 text-green-300">3. Tasarım Ayarları</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-300 mb-2">Üst Metin</label>
+                        <input type="text" id="topTextInput" value="Konuşma yasağının bitmesine" oninput="updatePreview()" class="w-full p-2 rounded-lg input-field">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-300 mb-2">Font</label>
+                        <select id="fontInput" onchange="updatePreview()" class="w-full p-3 rounded-lg input-field">
+                            <option value="'Fredoka', sans-serif">Fredoka (Varsayılan Normal)</option>
+                            <option value="Impact">Impact (Kalın)</option>
+                            <option value="'Bangers', cursive">Bangers (Çizgi Roman/Aksiyon)</option>
+                            <option value="'Press Start 2P', cursive">Retro Pixel (8-bit Oyun)</option>
+                            <option value="'Teko', sans-serif">Teko (Modern Keskin)</option>
+                            <option value="'Pacifico', cursive">Pacifico (El Yazısı)</option>
+                            <option value="'Comic Sans MS', cursive">Comic Sans (Klasik)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-300 mb-2">Renk</label>
+                        <input type="color" id="colorInput" value="#53ff53" oninput="updatePreview()" class="w-full h-10 rounded-lg cursor-pointer bg-transparent border-0 p-0">
+                    </div>
+
+                                        <div class="mb-4">
+                        <label class="block text-sm text-gray-300 mb-2">Transparanlık (Görünürlük)</label>
+                        <div class="flex items-center gap-4">
+                            <input type="range" id="opacityInput" min="0.1" max="1.0" step="0.1" value="1.0" oninput="updatePreview()" class="w-full accent-green-500">
+                            <span id="opacityValue" class="text-xs text-gray-400 font-mono w-8">100%</span>
+                        </div>
+                    </div>
+                    <div class="mb-4 flex items-center">
+                        <input type="checkbox" id="borderInput" onchange="updatePreview()" class="w-5 h-5 accent-green-500 cursor-pointer">
+                        <label class="ml-2 text-sm text-gray-300">Dış Çerçeve (Stroke) Ekle</label>
+                    </div>
+                </div>
+
+                <div class="glass rounded-lg preview-box">
+                    <p class="text-xs text-gray-400 mb-2 w-full text-left">Canlı Önizleme:</p>
+                    <div id="previewContainer" class="text-center font-bold" style="font-family: 'Inter'; color: #53ff53;">
+                        <div id="previewTopText" class="text-lg opacity-90 mb-1">Konuşma yasağının bitmesine</div>
+                        <div id="previewTimer" class="text-5xl tracking-wider">00:01:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mt-6">
+                <button onclick="prevStep(2)" class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
+                <button onclick="generateLink()" class="w-2/3 bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors">Bağlantı Oluştur</button>
+            </div>
+        </div>
+
+        <!-- Sonuç -->
+        <div id="step4" class="step">
+            <h2 class="text-2xl font-bold mb-4 text-green-400 text-center">Kurulum Tamamlandı!</h2>
+            
+            <div class="bg-black bg-opacity-50 p-4 rounded-lg mb-4 border border-green-500 border-opacity-30">
+                <p class="text-sm text-gray-300 mb-2">Bu linki OBS'te <strong class="text-white">Browser Source (Tarayıcı Kaynağı)</strong> olarak ekleyin:</p>
+                <div class="flex">
+                    <input type="text" id="finalLink" readonly class="w-full p-2 rounded-l-lg input-field text-sm font-mono text-gray-400" onclick="this.select()">
+                    <button onclick="copyLink()" class="bg-green-500 hover:bg-green-600 text-black px-4 rounded-r-lg font-semibold transition-colors">Kopyala</button>
+                </div>
+            </div>
+
+            <div class="bg-blue-900 bg-opacity-40 p-4 rounded-lg border border-blue-500 border-opacity-30 flex items-start gap-3">
+                <div class="text-blue-400 text-xl mt-1">ℹ️</div>
+                <div class="text-sm text-blue-100">
+                    <p class="font-semibold mb-1">Önemli OBS Ayarları:</p>
+                    <ul class="list-disc pl-4 space-y-1">
+                        <li>OBS'te kaynağı eklerken <strong>"Sesi OBS üzerinden kontrol et"</strong> (Control audio via OBS) seçeneğini kesinlikle işaretleyin.</li>
+                        <li>Genişlik: 800, Yükseklik: 300 tavsiye edilir.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button onclick="location.reload()" class="w-full mt-6 bg-transparent border border-gray-500 hover:bg-gray-800 text-white font-bold py-2 rounded-lg transition-colors">Yeni Zamanlayıcı Oluştur</button>
+        </div>
+
+    </div>
+
+    <script>
+        let chatroomId = '';
+        let channelCheckTimer = null;
+
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+        }
+
+        function nextStep(step) {
+            showStep(step);
+            if(step === 3) updatePreview();
+        }
+
+        function prevStep(step) {
+            showStep(step);
+        }
+
+        function onChannelInput() {
+            const channel = document.getElementById('channelInput').value.trim();
+            const statusEl = document.getElementById('channelStatus');
+            const errorEl = document.getElementById('channelError');
+            const btn = document.getElementById('btnStep1');
+            errorEl.classList.add('hidden');
+            statusEl.classList.add('hidden');
+            chatroomId = '';
+            btn.disabled = false;
+            btn.innerHTML = '<span>Devam Et</span>';
+            btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-green-400');
+            if (!channel) return;
+            if (channelCheckTimer) clearTimeout(channelCheckTimer);
+            channelCheckTimer = setTimeout(() => { checkChannel(channel); }, 700);
+        }
+
+        async function checkChannel(channel) {
+            const statusEl = document.getElementById('channelStatus');
+            const errorEl = document.getElementById('channelError');
+            const btn = document.getElementById('btnStep1');
+            statusEl.textContent = 'Kick kanalı kontrol ediliyor...';
+            statusEl.classList.remove('hidden');
+            errorEl.classList.add('hidden');
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            const apiTargets = [
+                'https://kick.com/api/v1/channels/' + channel,
+                'https://corsproxy.io/?url=' + encodeURIComponent('https://kick.com/api/v1/channels/' + channel),
+                'https://api.allorigins.win/get?url=' + encodeURIComponent('https://kick.com/api/v1/channels/' + channel),
+                'https://api.codetabs.com/v1/proxy?quest=https://kick.com/api/v2/channels/' + channel + '/chatroom'
+            ];
+            let foundChatroomId = null;
+            for (const url of apiTargets) {
+                try {
+                    const ctrl = new AbortController();
+                    const tid = setTimeout(() => ctrl.abort(), 7000);
+                    const res = await fetch(url, { signal: ctrl.signal });
+                    clearTimeout(tid);
+                    if (res.status === 404) break;
+                    const raw = await res.json();
+                    const data = raw.contents ? JSON.parse(raw.contents) : raw;
+                    if (data && data.chatroom && data.chatroom.id) { foundChatroomId = data.chatroom.id; window._kickChannelId = data.id; break; }
+                } catch (e) { continue; }
+            }
+            statusEl.classList.add('hidden');
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            if (foundChatroomId) {
+                chatroomId = foundChatroomId;
+                btn.innerHTML = '<span>Devam Et ✓</span>';
+                btn.classList.add('bg-green-400');
+            } else {
+                errorEl.textContent = 'Kick kanalı bulunamadı. Harf hatası yapmış olabilirsiniz.';
+                errorEl.classList.remove('hidden');
+                chatroomId = '';
+            }
+        }
+
+        async function validateChannel() {
+            const channel = document.getElementById('channelInput').value.trim();
+            const errorEl = document.getElementById('channelError');
+            if (!channel) {
+                errorEl.textContent = 'Lütfen kanal adını girin.';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            if (chatroomId) { nextStep(2); return; }
+            const statusEl = document.getElementById('channelStatus');
+            if (statusEl.classList.contains('hidden') && errorEl.classList.contains('hidden')) {
+                await checkChannel(channel);
+                if (chatroomId) nextStep(2);
+            }
+        }
+
+        function updatePreview() {
+            const topText = document.getElementById('topTextInput').value;
+            const font = document.getElementById('fontInput').value;
+            const opacity = document.getElementById('opacityInput').value;
+            document.getElementById('opacityValue').textContent = Math.round(opacity * 100) + '%';
+            
+            // previewContainer tanimini yukari tasimak gerekiyor
+            const previewContainer = document.getElementById('previewContainer');
+            previewContainer.style.opacity = opacity;
+            const color = document.getElementById('colorInput').value;
+            const hasBorder = document.getElementById('borderInput').checked;
+            const previewTopText = document.getElementById('previewTopText');
+            const durationVal = parseInt(document.getElementById('durationInput').value) || 1;
+            const durationStr = String(durationVal).padStart(2, '0');
+            document.getElementById('previewTimer').textContent = '00:' + durationStr + ':00';
+            previewTopText.textContent = topText;
+            previewContainer.style.fontFamily = font;
+            previewContainer.style.color = color;
+            
+            if (font.includes('Press Start 2P')) {
+                previewTopText.style.fontSize = '0.5rem';
+                previewTimer.style.fontSize = '1.5rem';
+            } else {
+                previewTopText.style.fontSize = '1.25rem'; 
+                previewTimer.style.fontSize = '3rem';
+            }
+            if (hasBorder) {
+                previewContainer.style.textShadow = '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 10px rgba(0,0,0,0.5)';
+            } else {
+                previewContainer.style.textShadow = '0 4px 10px rgba(0,0,0,0.5)';
+            }
+        }
+
+        function generateLink() {
+            const channel = document.getElementById('channelInput').value.trim();
+            const trigger = document.getElementById('triggerInput').value.trim();
+            const allowed = document.getElementById('allowedUsersInput').value.trim();
+            const duration = document.getElementById('durationInput').value;
+            if(!trigger) { alert('Lütfen tetikleyici adını girin!'); prevStep(2); return; }
+            const topText = document.getElementById('topTextInput').value;
+            const font = document.getElementById('fontInput').value;
+            const opacity = document.getElementById('opacityInput').value;
+            const color = document.getElementById('colorInput').value.replace('#', '');
+            const hasBorder = document.getElementById('borderInput').checked;
+            const url = new URL('overlay.html', window.location.href);
+            url.searchParams.set('channel', channel);
+            url.searchParams.set('chatroom_id', chatroomId);
+            if (window._kickChannelId) url.searchParams.set('channel_id', window._kickChannelId);
+            url.searchParams.set('trigger', trigger);
+            if (allowed) url.searchParams.set('allowed', allowed);
+            url.searchParams.set('duration', duration);
+            url.searchParams.set('text', topText);
+            url.searchParams.set('font', font);
+            if (opacity !== '1.0' && opacity !== '1') url.searchParams.set('opacity', opacity);
+            url.searchParams.set('color', color);
+            url.searchParams.set('border', hasBorder ? '1' : '0');
+            document.getElementById('finalLink').value = url.href;
+            showStep(4);
+        }
+
+        function copyLink() {
+            const linkInput = document.getElementById('finalLink');
+            linkInput.select();
+            document.execCommand('copy');
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Kopyalandı!';
+            btn.classList.replace('bg-green-500', 'bg-blue-500');
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.replace('bg-blue-500', 'bg-green-500');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
