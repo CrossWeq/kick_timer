@@ -44,20 +44,15 @@
         }
 
         /* Süre eklendiğinde parlama animasyonu */
-        @keyframes pulse-green {
-            0% { text-shadow: 0 0 10px #53ff53, 0 4px 10px rgba(0,0,0,0.5); transform: scale(1); }
-            50% { text-shadow: 0 0 30px #53ff53, 0 4px 10px rgba(0,0,0,0.5); transform: scale(1.05); }
-            100% { text-shadow: 0 0 10px #53ff53, 0 4px 10px rgba(0,0,0,0.5); transform: scale(1); }
-        }
         .animate-add {
-            animation: pulse-green 0.5s ease-out;
+            animation: pulse-dynamic 0.5s ease-out;
         }
     </style>
 </head>
 <body>
 
     <div id="timer-container">
-        <div id="top-text" class="text-2xl font-bold opacity-90 mb-2"></div>
+        <div id="top-text" class="text-4xl font-bold opacity-90 mb-2"></div>
         <div id="time-display" class="text-7xl font-bold tracking-wider">00:00:00</div>
     </div>
 
@@ -104,19 +99,34 @@
         let timerInterval = null;
 
         function playSound(type) {
+            if (type !== 'end') return;
             try {
-                if (type === 'beep') {
-                    new Audio(beepBase64).play();
-                } else if (type === 'quietBeep') {
-                    new Audio(quietBeepBase64).play();
-                } else if (type === 'end') {
-                    // Bitiş melodisi için 3 kere hızlı bip
-                    let beeps = 0;
-                    let i = setInterval(() => {
-                        new Audio(beepBase64).play();
-                        beeps++;
-                        if(beeps >= 3) clearInterval(i);
-                    }, 150);
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const totalDuration = 2.0; 
+                const freq = 1400; // Tiz beep
+                const beepLength = 0.08;
+                const gap = 0.04;
+                const totalBeeps = Math.floor(totalDuration / (beepLength + gap));
+
+                for (let i = 0; i < totalBeeps; i++) {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                    
+                    const startTime = ctx.currentTime + i * (beepLength + gap);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    gain.gain.setValueAtTime(0, startTime);
+                    gain.gain.linearRampToValueAtTime(0.08, startTime + 0.01);
+                    gain.gain.setValueAtTime(0.08, startTime + beepLength - 0.01);
+                    gain.gain.linearRampToValueAtTime(0, startTime + beepLength);
+                    
+                    osc.start(startTime);
+                    osc.stop(startTime + beepLength);
                 }
             } catch(e) {
                 console.log("Ses oynatılamadı", e);
@@ -147,13 +157,13 @@
                 remainingSeconds = addSeconds;
                 container.classList.add('visible');
                 updateDisplay();
-                playSound('beep');
+                // playSound('beep');
                 startTimer();
             } else {
                 // Halihazırda çalışıyor, süre ekle
                 remainingSeconds += addSeconds;
                 updateDisplay();
-                playSound('quietBeep');
+                // playSound('quietBeep');
                 
                 // Parlama animasyonu ekle
                 container.classList.remove('animate-add');
