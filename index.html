@@ -284,6 +284,14 @@
             previewTopText.textContent = topText;
             previewContainer.style.fontFamily = font;
             previewContainer.style.color = color;
+            
+            if (font.includes('Press Start 2P')) {
+                previewTopText.style.fontSize = '0.5rem';
+                previewTimer.style.fontSize = '1.5rem';
+            } else {
+                previewTopText.style.fontSize = '1.25rem'; 
+                previewTimer.style.fontSize = '3.5rem';
+            }
             if (hasBorder) {
                 previewContainer.style.textShadow = '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 10px rgba(0,0,0,0.5)';
             } else {
