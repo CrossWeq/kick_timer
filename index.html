@@ -56,7 +56,7 @@
             <h2 class="text-xl font-semibold mb-4 text-green-300">1. Kanal Bilgisi</h2>
             <div class="mb-4">
                 <label class="block text-sm text-gray-300 mb-2">Kick Kanal Adı</label>
-                <input type="text" id="channelInput" placeholder="Örn: xqc" class="w-full p-3 rounded-lg input-field">
+                <input type="text" id="channelInput" placeholder="Örn: crossweq" class="w-full p-3 rounded-lg input-field">
             </div>
             <button onclick="validateChannel()" id="btnStep1" class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors flex justify-center items-center">
                 <span>Devam Et</span>
@@ -74,7 +74,7 @@
             </div>
             <div class="mb-6">
                 <label class="block text-sm text-gray-300 mb-2">Eklenecek Süre (Dakika)</label>
-                <input type="number" id="durationInput" value="5" min="1" class="w-full p-3 rounded-lg input-field">
+                <input type="number" id="durationInput" value="1" min="1" class="w-full p-3 rounded-lg input-field">
             </div>
             <div class="flex gap-4">
                 <button onclick="prevStep(1)" class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
@@ -118,7 +118,7 @@
                     <p class="text-xs text-gray-400 mb-2 w-full text-left">Canlı Önizleme:</p>
                     <div id="previewContainer" class="text-center font-bold" style="font-family: 'Inter'; color: #53ff53;">
                         <div id="previewTopText" class="text-lg opacity-90 mb-1">Konuşma yasağının bitmesine</div>
-                        <div id="previewTimer" class="text-5xl tracking-wider">00:05:00</div>
+                        <div id="previewTimer" class="text-5xl tracking-wider">00:01:00</div>
                     </div>
                 </div>
             </div>
@@ -180,39 +180,49 @@
             const btn = document.getElementById('btnStep1');
             
             if (!channel) {
-                errorEl.textContent = "Lütfen kanal adını girin.";
+                errorEl.textContent = "L\u00FCtfen kanal ad\u0131n\u0131 girin.";
                 errorEl.classList.remove('hidden');
                 return;
             }
 
-            btn.innerHTML = `<span class="animate-pulse">Kontrol ediliyor...</span>`;
+            btn.innerHTML = <span class="animate-pulse">Kontrol ediliyor...</span>;
             errorEl.classList.add('hidden');
 
-            try {
-                // allorigins proxy to bypass cors
-                const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://kick.com/api/v1/channels/'+channel)}`);
-                const data = await res.json();
-                
-                if (data.contents) {
-                    const kickData = JSON.parse(data.contents);
-                    if (kickData && kickData.chatroom) {
-                        chatroomId = kickData.chatroom.id;
-                        btn.innerHTML = `<span>Devam Et</span>`;
-                        nextStep(2);
-                        return;
+            const apiTargets = [
+                https://kick.com/api/v2/channels//chatroom,
+                https://corsproxy.io/?url=,
+                https://api.allorigins.win/get?url=,
+                https://api.codetabs.com/v1/proxy?quest=https://kick.com/api/v2/channels//chatroom
+            ];
+
+            let foundChatroomId = null;
+            for (const url of apiTargets) {
+                try {
+                    const ctrl = new AbortController();
+                    const tid = setTimeout(() => ctrl.abort(), 7000);
+                    const res = await fetch(url, { signal: ctrl.signal });
+                    clearTimeout(tid);
+                    const raw = await res.json();
+                    const data = raw.contents ? JSON.parse(raw.contents) : raw;
+                    if (data && data.id) {
+                        foundChatroomId = data.id;
+                        break;
                     }
+                } catch (e) {
+                    continue;
                 }
-                throw new Error("Kanal bulunamadı");
-            } catch(e) {
-                btn.innerHTML = `<span>Devam Et</span>`;
-                const proceed = confirm("Kanal doğrulaması başarısız oldu (Proxy/Cloudflare engeli olabilir). Yine de devam etmek ister misiniz?");
-                if (proceed) {
-                    chatroomId = "unknown";
-                    nextStep(2);
-                } else {
-                    errorEl.textContent = "Doğrulama başarısız. Kanal adını kontrol edin.";
-                    errorEl.classList.remove('hidden');
-                }
+            }
+
+            if (foundChatroomId) {
+                chatroomId = foundChatroomId;
+                btn.innerHTML = <span>Devam Et</span>;
+                nextStep(2);
+            } else {
+                btn.innerHTML = <span>Devam Et</span>;
+                errorEl.textContent = "Do\u011Frulama ba\u015Far\u0131s\u0131z. Proxy/Cloudflare engeli. L\u00FCtfen kanal ad\u0131n\u0131 kontrol edin.";
+                errorEl.classList.remove('hidden');
+                chatroomId = "unknown";
+                nextStep(2);
             }
         }
 
@@ -224,6 +234,10 @@
 
             const previewContainer = document.getElementById('previewContainer');
             const previewTopText = document.getElementById('previewTopText');
+            
+            const durationVal = parseInt(document.getElementById('durationInput').value) || 1;
+            const durationStr = String(durationVal).padStart(2, '0');
+            document.getElementById('previewTimer').textContent = '00:' + durationStr + ':00';
 
             previewTopText.textContent = topText;
             previewContainer.style.fontFamily = font;

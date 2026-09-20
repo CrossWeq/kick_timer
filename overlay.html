@@ -67,7 +67,7 @@
         const channelName = params.get('channel');
         const chatroomId = params.get('chatroom_id');
         const triggerWord = params.get('trigger') ? params.get('trigger').toLowerCase() : '';
-        const durationMinutes = parseInt(params.get('duration')) || 5;
+        const durationMinutes = parseInt(params.get('duration')) || 1;
         const topText = params.get('text') || '';
         const fontFamily = params.get('font') || 'Inter';
         const color = '#' + (params.get('color') || '53ff53');
