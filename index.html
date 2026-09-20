@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -56,11 +56,12 @@
             <h2 class="text-xl font-semibold mb-4 text-green-300">1. Kanal Bilgisi</h2>
             <div class="mb-4">
                 <label class="block text-sm text-gray-300 mb-2">Kick Kanal Adı</label>
-                <input type="text" id="channelInput" placeholder="Örn: crossweq" class="w-full p-3 rounded-lg input-field">
+                <input type="text" id="channelInput" placeholder="Örn: crossweq" class="w-full p-3 rounded-lg input-field" oninput="onChannelInput()">
             </div>
             <button onclick="validateChannel()" id="btnStep1" class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors flex justify-center items-center">
                 <span>Devam Et</span>
             </button>
+            <p id="channelStatus" class="text-yellow-400 text-sm mt-2 hidden"></p>
             <p id="channelError" class="text-red-400 text-sm mt-2 hidden"></p>
         </div>
 
@@ -158,8 +159,9 @@
     </div>
 
     <script>
-        let chatroomId = "";
-        
+        let chatroomId = '';
+        let channelCheckTimer = null;
+
         function showStep(step) {
             document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
             document.getElementById('step' + step).classList.add('active');
@@ -174,27 +176,37 @@
             showStep(step);
         }
 
-        async function validateChannel() {
+        function onChannelInput() {
             const channel = document.getElementById('channelInput').value.trim();
+            const statusEl = document.getElementById('channelStatus');
             const errorEl = document.getElementById('channelError');
             const btn = document.getElementById('btnStep1');
-            
-            if (!channel) {
-                errorEl.textContent = "L\u00FCtfen kanal ad\u0131n\u0131 girin.";
-                errorEl.classList.remove('hidden');
-                return;
-            }
-
-            btn.innerHTML = <span class="animate-pulse">Kontrol ediliyor...</span>;
             errorEl.classList.add('hidden');
+            statusEl.classList.add('hidden');
+            chatroomId = '';
+            btn.disabled = false;
+            btn.innerHTML = '<span>Devam Et</span>';
+            btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-green-400');
+            if (!channel) return;
+            if (channelCheckTimer) clearTimeout(channelCheckTimer);
+            channelCheckTimer = setTimeout(() => { checkChannel(channel); }, 700);
+        }
 
+        async function checkChannel(channel) {
+            const statusEl = document.getElementById('channelStatus');
+            const errorEl = document.getElementById('channelError');
+            const btn = document.getElementById('btnStep1');
+            statusEl.textContent = 'Kick kanalı kontrol ediliyor...';
+            statusEl.classList.remove('hidden');
+            errorEl.classList.add('hidden');
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
             const apiTargets = [
-                https://kick.com/api/v2/channels//chatroom,
-                https://corsproxy.io/?url=,
-                https://api.allorigins.win/get?url=,
-                https://api.codetabs.com/v1/proxy?quest=https://kick.com/api/v2/channels//chatroom
+                'https://kick.com/api/v2/channels/' + channel + '/chatroom',
+                'https://corsproxy.io/?url=' + encodeURIComponent('https://kick.com/api/v2/channels/' + channel + '/chatroom'),
+                'https://api.allorigins.win/get?url=' + encodeURIComponent('https://kick.com/api/v2/channels/' + channel + '/chatroom'),
+                'https://api.codetabs.com/v1/proxy?quest=https://kick.com/api/v2/channels/' + channel + '/chatroom'
             ];
-
             let foundChatroomId = null;
             for (const url of apiTargets) {
                 try {
@@ -202,27 +214,39 @@
                     const tid = setTimeout(() => ctrl.abort(), 7000);
                     const res = await fetch(url, { signal: ctrl.signal });
                     clearTimeout(tid);
+                    if (res.status === 404) break;
                     const raw = await res.json();
                     const data = raw.contents ? JSON.parse(raw.contents) : raw;
-                    if (data && data.id) {
-                        foundChatroomId = data.id;
-                        break;
-                    }
-                } catch (e) {
-                    continue;
-                }
+                    if (data && data.id) { foundChatroomId = data.id; break; }
+                } catch (e) { continue; }
             }
-
+            statusEl.classList.add('hidden');
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
             if (foundChatroomId) {
                 chatroomId = foundChatroomId;
-                btn.innerHTML = <span>Devam Et</span>;
-                nextStep(2);
+                btn.innerHTML = '<span>Devam Et ✓</span>';
+                btn.classList.add('bg-green-400');
             } else {
-                btn.innerHTML = <span>Devam Et</span>;
-                errorEl.textContent = "Do\u011Frulama ba\u015Far\u0131s\u0131z. Proxy/Cloudflare engeli. L\u00FCtfen kanal ad\u0131n\u0131 kontrol edin.";
+                errorEl.textContent = 'Kick kanalı bulunamadı. Harf hatası yapmış olabilirsiniz.';
                 errorEl.classList.remove('hidden');
-                chatroomId = "unknown";
-                nextStep(2);
+                chatroomId = '';
+            }
+        }
+
+        async function validateChannel() {
+            const channel = document.getElementById('channelInput').value.trim();
+            const errorEl = document.getElementById('channelError');
+            if (!channel) {
+                errorEl.textContent = 'Lütfen kanal adını girin.';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            if (chatroomId) { nextStep(2); return; }
+            const statusEl = document.getElementById('channelStatus');
+            if (statusEl.classList.contains('hidden') && errorEl.classList.contains('hidden')) {
+                await checkChannel(channel);
+                if (chatroomId) nextStep(2);
             }
         }
 
@@ -231,22 +255,18 @@
             const font = document.getElementById('fontInput').value;
             const color = document.getElementById('colorInput').value;
             const hasBorder = document.getElementById('borderInput').checked;
-
             const previewContainer = document.getElementById('previewContainer');
             const previewTopText = document.getElementById('previewTopText');
-            
             const durationVal = parseInt(document.getElementById('durationInput').value) || 1;
             const durationStr = String(durationVal).padStart(2, '0');
             document.getElementById('previewTimer').textContent = '00:' + durationStr + ':00';
-
             previewTopText.textContent = topText;
             previewContainer.style.fontFamily = font;
             previewContainer.style.color = color;
-
             if (hasBorder) {
-                previewContainer.style.textShadow = "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 10px rgba(0,0,0,0.5)";
+                previewContainer.style.textShadow = '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 10px rgba(0,0,0,0.5)';
             } else {
-                previewContainer.style.textShadow = "0 4px 10px rgba(0,0,0,0.5)";
+                previewContainer.style.textShadow = '0 4px 10px rgba(0,0,0,0.5)';
             }
         }
 
@@ -254,18 +274,11 @@
             const channel = document.getElementById('channelInput').value.trim();
             const trigger = document.getElementById('triggerInput').value.trim();
             const duration = document.getElementById('durationInput').value;
-            
-            if(!trigger) {
-                alert("Lütfen tetikleyici adını girin!");
-                prevStep(2);
-                return;
-            }
-
+            if(!trigger) { alert('Lütfen tetikleyici adını girin!'); prevStep(2); return; }
             const topText = document.getElementById('topTextInput').value;
             const font = document.getElementById('fontInput').value;
             const color = document.getElementById('colorInput').value.replace('#', '');
             const hasBorder = document.getElementById('borderInput').checked;
-
             const url = new URL('overlay.html', window.location.href);
             url.searchParams.set('channel', channel);
             url.searchParams.set('chatroom_id', chatroomId);
@@ -275,7 +288,6 @@
             url.searchParams.set('font', font);
             url.searchParams.set('color', color);
             url.searchParams.set('border', hasBorder ? '1' : '0');
-
             document.getElementById('finalLink').value = url.href;
             showStep(4);
         }
@@ -284,10 +296,9 @@
             const linkInput = document.getElementById('finalLink');
             linkInput.select();
             document.execCommand('copy');
-            
             const btn = event.target;
             const originalText = btn.textContent;
-            btn.textContent = "Kopyalandı!";
+            btn.textContent = 'Kopyalandı!';
             btn.classList.replace('bg-green-500', 'bg-blue-500');
             setTimeout(() => {
                 btn.textContent = originalText;
