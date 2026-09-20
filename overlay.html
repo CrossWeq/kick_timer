@@ -52,7 +52,7 @@
 <body>
 
     <div id="timer-container">
-        <div id="top-text" class="text-4xl font-bold opacity-90 mb-2"></div>
+        <div id="top-text" class="text-4xl font-bold opacity-90 mb-2 text-center max-w-[65vw] break-words leading-tight"></div>
         <div id="time-display" class="text-7xl font-bold tracking-wider">00:00:00</div>
     </div>
 
@@ -104,7 +104,7 @@
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (!AudioContext) return;
                 const ctx = new AudioContext();
-                const totalDuration = 2.0; 
+                const totalDuration = 1.0; 
                 const freq = 1400; // Tiz beep
                 const beepLength = 0.08;
                 const gap = 0.04;
