@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Kick Event Tester</title>
+<script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
+<style>
+body { background: #111; color: #0f0; font-family: monospace; padding: 20px; }
+#log { background: #000; padding: 15px; border-radius: 8px; height: 80vh; overflow-y: auto; font-size: 13px; }
+.event-line { border-bottom: 1px solid #222; padding: 8px 0; word-break: break-all; }
+.event-line.highlight { background: #1a2a00; color: #7fff00; font-weight: bold; }
+input { background: #222; color: #fff; border: 1px solid #555; padding: 8px; width: 300px; border-radius: 4px; }
+button { background: #53ff53; color: #000; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+h1 { color: #53ff53; }
+</style>
+</head>
+<body>
+<h1>Kick Event Tester</h1>
+<p>Chatroom ID'ni gir, Bağlan'a bas, sonra Kick'te odülü kullan ve ne geldiğini gör.</p>
+<input type="text" id="roomId" placeholder="Chatroom ID (örn: 26915392)" value="26915392">
+<button onclick="connect()">Bağlan</button>
+<br><br>
+<div id="log"><div style="color:#555">Bağlanmayı bekleniyor...</div></div>
+
+<script>
+function connect() {
+    const chatroomId = document.getElementById('roomId').value.trim();
+    if (!chatroomId) { alert('ID gir!'); return; }
+    
+    const log = document.getElementById('log');
+    log.innerHTML = '';
+
+    function addLog(text, highlight) {
+        const div = document.createElement('div');
+        div.className = 'event-line' + (highlight ? ' highlight' : '');
+        div.textContent = new Date().toLocaleTimeString() + ' | ' + text;
+        log.prepend(div);
+    }
+
+    const pusher = new Pusher('32cbd69e4b950bf97679', { cluster: 'us2', forceTLS: true });
+    const ch = pusher.subscribe('chatrooms.' + chatroomId + '.v2');
+    
+    addLog('Subscribe edildi: chatrooms.' + chatroomId + '.v2', false);
+
+    ch.bind_global(function(eventName, rawData) {
+        if (eventName.startsWith('pusher:')) return;
+        
+        try {
+            let data = rawData;
+            if (typeof rawData === 'string') data = JSON.parse(rawData);
+            if (data && typeof data.data === 'string') data = JSON.parse(data.data);
+            
+            const type = (data && data.type) ? data.type : '(yok)';
+            const content = (data && data.content) ? data.content : '(yok)';
+            const sender = (data && data.sender && data.sender.username) ? data.sender.username : '(yok)';
+            
+            const isNotMessage = type !== 'message';
+            const summary = 'EVENT: ' + eventName + ' | type: ' + type + ' | sender: ' + sender + ' | content: ' + content;
+            addLog(summary, isNotMessage);
+            
+        } catch(e) {
+            addLog('EVENT: ' + eventName + ' | RAW: ' + JSON.stringify(rawData), false);
+        }
+    });
+}
+</script>
+</body>
+</html>
