@@ -202,10 +202,10 @@
             btn.disabled = true;
             btn.classList.add('opacity-50', 'cursor-not-allowed');
             const apiTargets = [
-                'https://kick.com/api/v1/channels/' + channel',
-                'https://corsproxy.io/?url=' + encodeURIComponent('https://kick.com/api/v1/channels/' + channel'),
-                'https://api.allorigins.win/get?url=' + encodeURIComponent('https://kick.com/api/v1/channels/' + channel'),
-                'https://api.codetabs.com/v1/proxy?quest=https://kick.com/api/v1/channels/' + channel'
+                'https://kick.com/api/v1/channels/' + channel,
+                'https://corsproxy.io/?url=' + encodeURIComponent('https://kick.com/api/v1/channels/' + channel),
+                'https://api.allorigins.win/get?url=' + encodeURIComponent('https://kick.com/api/v1/channels/' + channel),
+                'https://api.codetabs.com/v1/proxy?quest=https://kick.com/api/v1/channels/' + channel
             ];
             let foundChatroomId = null;
             for (const url of apiTargets) {
@@ -282,7 +282,6 @@
             const url = new URL('overlay.html', window.location.href);
             url.searchParams.set('channel', channel);
             url.searchParams.set('chatroom_id', chatroomId);
-            if (window._kickChannelId) url.searchParams.set('channel_id', window._kickChannelId);
             if (window._kickChannelId) url.searchParams.set('channel_id', window._kickChannelId);
             url.searchParams.set('trigger', trigger);
             url.searchParams.set('duration', duration);
