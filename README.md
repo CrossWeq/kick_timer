@@ -1,29 +1,56 @@
 # Kick Timer Overlay
 
-OBS için özel olarak tasarlanmış, **Kick** yayıncılarına yönelik sohbet komutları (örn: !sus) ile tetiklenen süre eklemeli zamanlayıcı (Timer) overlay projesi.
+OBS için özel olarak tasarlanmış, **Kick** yayıncılarına yönelik sohbet komutları (örn: `!sus`) ve sadakat ödülleri ile tetiklenen süre eklemeli zamanlayıcı (Timer) overlay projesi.
 
 ## Özellikler
-- **Tamamen Statik & Sunucusuz:** Sadece HTML, CSS (Tailwind) ve JavaScript ile çalışır. Sunucu (backend) maliyeti veya kurulumu gerektirmez. (GitHub Pages üzerinden tek tıkla barındırılabilir.)
-- **Kolay Kurulum Paneli (index.html):** Modern arayüzlü yapılandırma sayfası ile Kick kanal adınızı doğrulayabilir, renkleri, yazılı fontlarını, saydamlık ve çerçeve özelliklerini canlı önizleme (Live Preview) ile ayarlayabilirsiniz.
-- **Sohbet Komutu ile Kontrol (Pusher JS):** Kick'in kendi WebSockets altyapısı (Pusher) kullanılarak sohbet mesajları dinlenir. Sadece belirlediğiniz kullanıcıların (Örn: botunuz veya yetkilileriniz) yazdığı tetikleyici komut (!sus vb.) dikkate alınarak sayaç otomatik başlar.
+- **Kolay Kurulum Paneli (index.html):** Modern arayüzlü yapılandırma sayfası ile Kick kanal adınızı doğrulayabilir; yetkili kişileri, tetikleyici komutu, renkleri, fontları, saydamlık ve çerçeve özelliklerini canlı önizleme (Live Preview) ile ayarlayabilirsiniz.
+- **Sohbet Komutu ile Kontrol (Pusher JS):** Cloudflare Worker köprüsü ve Kick resmi webhook altyapısı sayesinde sadece izin verdiğiniz kişilerin yazdığı `!` komutları işlenir.
+- **Botrix & Sadakat Puanı Uyumu:** Kanal puanı hediyeleriyle tetikleme yapılabilir (izleyici ödülü aldığında Botrix chate komutu atar, sayaç otomatik başlar).
 - **Otomatik Süre Ekleme ve Parlama Efekti:** İzin verilen bir kişi komutu yazdığında mevcut süreye ekleme yapılır ve sayaç belirlediğiniz renkte parlar.
 - **Sesli Uyarı Sistemi:** Sayaç süresi tamamen bittiğinde otomatik olarak uyarıcı bir zil/bip sesi çalar.
 
-## Nasıl Kullanılır?
-1. index.html sayfasını tarayıcınızda açın.
-2. Yayıncı kanal adınızı girin ve "Kontrol Et" ile doğrulayın.
-3. Tetiklemek istediğiniz komutu (Örn: !sus), bu komutu kullanabilecek kişilerin kullanıcı adlarını (Örn: botrix, yayinci_adi) ve eklenecek süreyi belirleyin.
-4. Tasarım bölümünden zevkinize göre renk, font, transparanlık ve metin ayarlarınızı yapıp **Bağlantı Oluştur** butonuna tıklayın.
-5. Oluşturulan linki kopyalayın.
-6. **OBS Studio** (veya benzeri bir yayın yazılımı) programında yeni bir **Tarayıcı Kaynağı (Browser Source)** ekleyin.
-7. Kopyaladığınız linki URL kısmına yapıştırın (Önerilen boyut: 800x300 veya 1000x400).
-8. Kaynak özelliklerindeki **"Sesi OBS üzerinden kontrol et" (Control audio via OBS)** seçeneğini işaretlemeyi unutmayın!
+---
+
+## 🚀 Kick Timer Nedir & Nasıl Kurulur?
+
+### 1. Kanal Doğrulaması
+Kick kullanıcı adınızı girin. Sistem kanalınızı başarıyla doğruladıktan sonra **Devam Et** butonuna tıklayarak sonraki aşamaya geçin.
+
+### 2. Komut ve Yetki Ayarları
+Sayacı yönetecek komutları ve bu komutları kimlerin kullanabileceğini belirleyin:
+- **Yetkili Kişiler:** Chate komut yazarak süreye ekleme yapabilecek kişileri seçin.  
+  *(Öneri: Güvenlik için sadece yayıncının kendisini ve botrix'i yetkilendirmeniz tavsiye edilir. Gerekirse güvenilir moderatörlerinizi de ekleyebilirsiniz.)*
+- **Tetikleyici Kelime:** Sayacı çalıştıracak komutu belirleyin *(Varsayılan olarak `!sus` şeklindedir, isteğinize göre değiştirebilirsiniz)*.
+- **Eklenecek Süre (Dakika):** Komut her yazıldığında sayaca kaç dakika ekleneceğini ayarlayın.  
+Ayarları tamamladıktan sonra **Devam Et** butonuna tıklayın.
+
+### 3. Tasarım Ayarları
+Sayacınızın yayındaki görünümünü özelleştirin:
+- **Sayaç Üstü Metni:** Sayacın hemen üzerinde görünecek bilgilendirme yazısını belirleyin (Örn: *Konuşma yasağının bitmesine*).
+- **Görünüm:** Font (yazı tipi), renk ve saydamlık (transparanlık) ayarlarını temanıza göre yapın.
+- **Çerçeve (Stroke):** Yazıların daha okunaklı olması için metin dışına siyah çerçeve ekleme seçeneğini açıp kapatabilirsiniz.  
+Tasarımınız hazır olduğunda **Bağlantı Oluştur** butonuna tıklayın ve ekranda beliren linki kopyalayın.
+
+### 4. OBS'e Ekleme
+1. Kopyaladığınız bağlantıyı OBS'te yeni bir **Tarayıcı (Browser)** kaynağı oluşturarak URL kısmına yapıştırın.
+2. **Önerilen Boyutlar:** Genişlik 800, Yükseklik 300 *(Zorunlu değildir, sahnenize göre değiştirebilirsiniz)*.
+3. ⚠️ **ÖNEMLİ:** Kaynağı eklerken **"Sesi OBS üzerinden kontrol et" (Control audio via OBS)** seçeneğini **KESİNLİKLE** işaretleyin. Aksi takdirde, süre bitiminde çalacak olan alarm sesini yayına ve kulaklığınıza iletemezsiniz.
+
+### 5. Botrix ile Sadakat Puanı Entegrasyonu
+*(Sadakat ödülleri ile otomatik çalıştırmak isteyenler için)*  
+Sayacınızı izleyicilerin sadakat puanı (kanal puanı) ile aldıkları bir hediye üzerinden otomatik tetiklemek için:
+1. **Botrix paneline** gidin ve **Sadakat (Loyalty)** sekmesini açın.
+2. Kick sadakat puanları kısmından istediğiniz ödülü seçin veya sayaca özel yeni bir ödül oluşturun.
+3. Ödül ayarlarına girerek, bu ödül kullanıldığında Botrix'in chate sizin belirlediğiniz tetikleyici komutu (örn: `!sus`) sohbet mesajı olarak yazmasını sağlayın.
+4. 💡 **İpucu:** Sayacın başladığını yayın sırasında anında fark etmek için, aynı ödülün Botrix ayarlarına uyarıcı bir ses efekti de ekleyebilirsiniz.
+
+---
 
 ## Kullanılan Teknolojiler
 - HTML5 & CSS3
 - Vanilla JavaScript
 - Tailwind CSS (CDN)
-- Pusher JS (Kick WebSocket altyapısı için)
+- Pusher JS & Cloudflare Worker (Kick Resmi API Webhook Entegrasyonu)
 - Google Fonts
 
 ## Lisans
