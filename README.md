@@ -7,7 +7,7 @@ OBS için özel olarak tasarlanmış, **Kick** yayıncılarına yönelik sohbet 
 ## Özellikler
 - **Kolay Kurulum Paneli (index.html):** Modern arayüzlü yapılandırma sayfası ile Kick kanal adınızı doğrulayabilir; yetkili kişileri, tetikleyici komutu, renkleri, fontları, saydamlık ve çerçeve özelliklerini canlı önizleme (Live Preview) ile ayarlayabilirsiniz.
 - **Sohbet Komutu ile Kontrol (Pusher JS):** Cloudflare Worker köprüsü ve Kick resmi webhook altyapısı sayesinde sadece izin verdiğiniz kişilerin yazdığı `!` komutları işlenir.
-- **✨ Dinamik Süre Ekleme (Örn: `!sus 20` / `!sus 12`):** Komuttan sonra boşluk bırakıp bir sayı yazarak (örn: `!sus 20` veya `!sus 12`) tek seferde doğrudan belirtilen dakika kadar süre ekleyebilirsiniz. Sayı yazılmazsa panelde ayarlanan varsayılan süre eklenir.
+- **Dinamik Süre Ekleme (Örn: `!sus 20` / `!sus 12`):** Komuttan sonra boşluk bırakıp bir sayı yazarak (örn: `!sus 20` veya `!sus 12`) tek seferde doğrudan belirtilen dakika kadar süre ekleyebilirsiniz. Sayı yazılmazsa panelde ayarlanan varsayılan süre eklenir.
 - **Botrix & Sadakat Puanı Uyumu:** Kanal puanı hediyeleriyle tetikleme yapılabilir (izleyici ödülü aldığında Botrix chate komutu atar, sayaç otomatik başlar). Farklı puanlar için farklı süreler (örn: `!sus 5`, `!sus 20`) tanımlanabilir.
 - **Otomatik Süre Ekleme ve Parlama Efekti:** İzin verilen bir kişi komutu yazdığında mevcut süreye ekleme yapılır ve sayaç belirlediğiniz renkte parlar.
 - **Sesli Uyarı Sistemi:** Sayaç süresi tamamen bittiğinde otomatik olarak uyarıcı bir zil/bip sesi çalar.

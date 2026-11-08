@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kick Zamanlayıcı Kurulumu</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@400;600&family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@400;600&family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
     <style>
         body {
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -13,6 +16,7 @@
             min-height: 100vh;
             font-family: 'Inter', sans-serif;
         }
+
         .glass {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
@@ -20,19 +24,31 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
-        .step { display: none; opacity: 0; transition: opacity 0.3s ease; }
-        .step.active { display: block; opacity: 1; }
+
+        .step {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .step.active {
+            display: block;
+            opacity: 1;
+        }
+
         .input-field {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
             transition: all 0.3s;
         }
+
         .input-field:focus {
             outline: none;
             border-color: #53ff53;
             box-shadow: 0 0 10px rgba(83, 255, 83, 0.2);
         }
+
         .preview-box {
             background-color: transparent;
             display: flex;
@@ -42,15 +58,19 @@
             padding: 20px;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@600&family=Pacifico&family=Press+Start+2P&family=Teko:wght@600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@600&family=Pacifico&family=Press+Start+2P&family=Teko:wght@600&display=swap"
+        rel="stylesheet">
 </head>
+
 <body class="flex items-center justify-center p-4">
 
     <div class="glass rounded-2xl w-full max-w-xl p-8">
         <div class="text-center mb-8 relative">
             <h1 class="text-3xl font-bold text-green-400 mb-2">Kick Timer Overlay</h1>
             <p class="text-gray-300 text-sm mb-4">OBS için sohbet komutuyla çalışan modüler zamanlayıcı</p>
-            <button type="button" onclick="toggleHelpModal()" class="inline-flex items-center gap-2 bg-green-500/15 hover:bg-green-500/25 border border-green-500/40 text-green-300 text-xs sm:text-sm font-semibold py-2 px-4 rounded-xl transition-all shadow-md hover:scale-[1.02]">
+            <button type="button" onclick="toggleHelpModal()"
+                class="inline-flex items-center gap-2 bg-green-500/15 hover:bg-green-500/25 border border-green-500/40 text-green-300 text-xs sm:text-sm font-semibold py-2 px-4 rounded-xl transition-all shadow-md hover:scale-[1.02]">
                 <span>Kick Timer Nedir & Nasıl Kurulur?</span>
             </button>
         </div>
@@ -60,9 +80,11 @@
             <h2 class="text-xl font-semibold mb-4 text-green-300">1. Kanal Bilgisi</h2>
             <div class="mb-4">
                 <label class="block text-sm text-gray-300 mb-2">Kick Kanal Adı</label>
-                <input type="text" id="channelInput" placeholder="Örn: crossweq" class="w-full p-3 rounded-lg input-field" oninput="onChannelInput()">
+                <input type="text" id="channelInput" placeholder="Örn: crossweq"
+                    class="w-full p-3 rounded-lg input-field" oninput="onChannelInput()">
             </div>
-            <button onclick="validateChannel()" id="btnStep1" class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors flex justify-center items-center">
+            <button onclick="validateChannel()" id="btnStep1"
+                class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors flex justify-center items-center">
                 <span>Devam Et</span>
             </button>
             <p id="channelStatus" class="text-yellow-400 text-sm mt-2 hidden"></p>
@@ -74,36 +96,46 @@
             <h2 class="text-xl font-semibold mb-4 text-green-300">2. Tetikleyici ve Süre</h2>
             <div class="mb-4">
                 <label class="block text-sm text-gray-300 mb-2">İzin Verilen Kullanıcılar (Virgülle Ayırın)</label>
-                <input type="text" id="allowedUsersInput" value="" placeholder="Örn: botrix, yayinci_adi" class="w-full p-3 rounded-lg input-field">
-                <p class="text-xs text-gray-400 mt-1 mb-4">Sadece bu kişilerin yazdığı komutlar geçerli olur. Boş bırakırsanız herkes kullanabilir.</p>
+                <input type="text" id="allowedUsersInput" value="" placeholder="Örn: botrix, yayinci_adi"
+                    class="w-full p-3 rounded-lg input-field">
+                <p class="text-xs text-gray-400 mt-1 mb-4">Sadece bu kişilerin yazdığı komutlar geçerli olur. Boş
+                    bırakırsanız herkes kullanabilir.</p>
             </div>
             <div class="mb-4">
                 <label class="block text-sm text-gray-300 mb-2">Tetikleyici Komut</label>
-                <input type="text" id="triggerInput" value="!sus" placeholder="Örn: !sus" class="w-full p-3 rounded-lg input-field">
-                <p class="text-xs text-gray-400 mt-1">İzin verilen kişiler bu komutu yazdığında süre eklenir. Boşluk bırakıp sayı yazarak (örn: <code class="text-green-300 font-mono">!sus 20</code> veya <code class="text-green-300 font-mono">!sus 12</code>) doğrudan o kadar dakika ekleyebilirsiniz.</p>
+                <input type="text" id="triggerInput" value="!sus" placeholder="Örn: !sus"
+                    class="w-full p-3 rounded-lg input-field">
+                <p class="text-xs text-gray-400 mt-1">İzin verilen kişiler bu komutu yazdığında süre eklenir. Boşluk
+                    bırakıp sayı yazarak (örn: <code class="text-green-300 font-mono">!sus 20</code> veya <code
+                        class="text-green-300 font-mono">!sus 12</code>) doğrudan o kadar dakika ekleyebilirsiniz.</p>
             </div>
             <div class="mb-6">
                 <label class="block text-sm text-gray-300 mb-2">Varsayılan Eklenecek Süre (Dakika)</label>
                 <input type="number" id="durationInput" value="1" min="1" class="w-full p-3 rounded-lg input-field">
-                <p class="text-xs text-gray-400 mt-1">Komutun yanına sayı yazılmadığında (sadece <code>!sus</code> yazıldığında) eklenecek süredir.</p>
+                <p class="text-xs text-gray-400 mt-1">Komutun yanına sayı yazılmadığında (sadece <code>!sus</code>
+                    yazıldığında) eklenecek süredir.</p>
             </div>
             <div class="flex gap-4">
-                <button onclick="prevStep(1)" class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
-                <button onclick="nextStep(3)" class="w-2/3 bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors">Devam Et</button>
+                <button onclick="prevStep(1)"
+                    class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
+                <button onclick="nextStep(3)"
+                    class="w-2/3 bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors">Devam
+                    Et</button>
             </div>
         </div>
 
         <!-- Adım 3 -->
         <div id="step3" class="step">
             <h2 class="text-xl font-semibold mb-4 text-green-300">3. Tasarım Ayarları</h2>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <div class="mb-4">
                         <label class="block text-sm text-gray-300 mb-2">Üst Metin</label>
-                        <input type="text" id="topTextInput" value="Konuşma yasağının bitmesine" oninput="updatePreview()" class="w-full p-2 rounded-lg input-field">
+                        <input type="text" id="topTextInput" value="Konuşma yasağının bitmesine"
+                            oninput="updatePreview()" class="w-full p-2 rounded-lg input-field">
                     </div>
-                    
+
                     <div class="mb-4">
                         <label class="block text-sm text-gray-300 mb-2">Font</label>
                         <select id="fontInput" onchange="updatePreview()" class="w-full p-3 rounded-lg input-field">
@@ -119,25 +151,29 @@
 
                     <div class="mb-4">
                         <label class="block text-sm text-gray-300 mb-2">Renk</label>
-                        <input type="color" id="colorInput" value="#53ff53" oninput="updatePreview()" class="w-full h-10 rounded-lg cursor-pointer bg-transparent border-0 p-0">
+                        <input type="color" id="colorInput" value="#53ff53" oninput="updatePreview()"
+                            class="w-full h-10 rounded-lg cursor-pointer bg-transparent border-0 p-0">
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm text-gray-300 mb-2">Transparanlık (Görünürlük)</label>
                         <div class="flex items-center gap-4">
-                            <input type="range" id="opacityInput" min="0.1" max="1.0" step="0.1" value="1.0" oninput="updatePreview()" class="w-full accent-green-500">
+                            <input type="range" id="opacityInput" min="0.1" max="1.0" step="0.1" value="1.0"
+                                oninput="updatePreview()" class="w-full accent-green-500">
                             <span id="opacityValue" class="text-xs text-gray-400 font-mono w-8">100%</span>
                         </div>
                     </div>
                     <div class="mb-4 flex items-center">
-                        <input type="checkbox" id="borderInput" onchange="updatePreview()" class="w-5 h-5 accent-green-500 cursor-pointer">
+                        <input type="checkbox" id="borderInput" onchange="updatePreview()"
+                            class="w-5 h-5 accent-green-500 cursor-pointer">
                         <label class="ml-2 text-sm text-gray-300">Dış Çerçeve (Stroke) Ekle</label>
                     </div>
                 </div>
 
                 <div class="glass rounded-lg preview-box">
                     <p class="text-xs text-gray-400 mb-2 w-full text-left">Canlı Önizleme:</p>
-                    <div id="previewContainer" class="text-center font-bold" style="font-family: 'Inter'; color: #53ff53;">
+                    <div id="previewContainer" class="text-center font-bold"
+                        style="font-family: 'Inter'; color: #53ff53;">
                         <div id="previewTopText" class="text-lg opacity-90 mb-1">Konuşma yasağının bitmesine</div>
                         <div id="previewTimer" class="text-5xl tracking-wider">00:01:00</div>
                     </div>
@@ -145,57 +181,82 @@
             </div>
 
             <div class="flex gap-4 mt-6">
-                <button onclick="prevStep(2)" class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
-                <button onclick="generateLink()" class="w-2/3 bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors">Bağlantı Oluştur</button>
+                <button onclick="prevStep(2)"
+                    class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
+                <button onclick="generateLink()"
+                    class="w-2/3 bg-green-500 hover:bg-green-600 text-black font-bold py-3 rounded-lg transition-colors">Bağlantı
+                    Oluştur</button>
             </div>
         </div>
 
         <!-- Sonuç -->
         <div id="step4" class="step">
             <h2 class="text-2xl font-bold mb-4 text-green-400 text-center">Kurulum Tamamlandı!</h2>
-            
+
             <div class="bg-black bg-opacity-50 p-4 rounded-lg mb-4 border border-green-500 border-opacity-30">
-                <p class="text-sm text-gray-300 mb-2">Bu linki OBS'te <strong class="text-white">Browser Source (Tarayıcı Kaynağı)</strong> olarak ekleyin:</p>
+                <p class="text-sm text-gray-300 mb-2">Bu linki OBS'te <strong class="text-white">Browser Source
+                        (Tarayıcı Kaynağı)</strong> olarak ekleyin:</p>
                 <div class="flex">
-                    <input type="text" id="finalLink" readonly class="w-full p-2 rounded-l-lg input-field text-sm font-mono text-gray-400" onclick="this.select()">
-                    <button onclick="copyLink()" class="bg-green-500 hover:bg-green-600 text-black px-4 rounded-r-lg font-semibold transition-colors">Kopyala</button>
+                    <input type="text" id="finalLink" readonly
+                        class="w-full p-2 rounded-l-lg input-field text-sm font-mono text-gray-400"
+                        onclick="this.select()">
+                    <button onclick="copyLink()"
+                        class="bg-green-500 hover:bg-green-600 text-black px-4 rounded-r-lg font-semibold transition-colors">Kopyala</button>
                 </div>
             </div>
 
-            <div class="bg-blue-900 bg-opacity-40 p-4 rounded-lg border border-blue-500 border-opacity-30 flex items-start gap-3">
+            <div
+                class="bg-blue-900 bg-opacity-40 p-4 rounded-lg border border-blue-500 border-opacity-30 flex items-start gap-3">
                 <div class="text-blue-400 text-xl mt-1">ℹ️</div>
                 <div class="text-sm text-blue-100">
                     <p class="font-semibold mb-1">Önemli OBS Ayarları:</p>
                     <ul class="list-disc pl-4 space-y-1">
-                        <li>OBS'te kaynağı eklerken <strong>"Sesi OBS üzerinden kontrol et"</strong> (Control audio via OBS) seçeneğini kesinlikle işaretleyin.</li>
-                        <li>Ardından OBS Ses Karıştırıcısı'nda kaynağın yanındaki <strong>Kulaklık sembolünü açık</strong> (veya Gelişmiş Ses Özellikleri'nden <em>"Yenileme ve Çıkış"</em>) durumuna getirin; bu sayede süre bittiğinde alarm sesinden haberdar olabilirsiniz.</li>
-                        <li>⚠️ <strong>Çoklu Sahne Kullanımı:</strong> Zamanlayıcıyı OBS'te birden fazla sahnede kullanacaksanız, sahneler arası geçişte sürenin sıfırlanmaması ve çakışma olmaması için diğer sahnelere eklerken sıfırdan yeni kaynak açmak yerine mutlaka <strong>"Var Olanı Ekle" (Add Existing)</strong> seçeneği ile tek bir kaynak olarak ekleyin.</li>
+                        <li>OBS'te kaynağı eklerken <strong>"Sesi OBS üzerinden kontrol et"</strong> (Control audio via
+                            OBS) seçeneğini kesinlikle işaretleyin.</li>
+                        <li>Ardından OBS Ses Karıştırıcısı'nda kaynağın yanındaki <strong>Kulaklık sembolünü
+                                açık</strong> (veya Gelişmiş Ses Özellikleri'nden <em>"Yenileme ve Çıkış"</em>) durumuna
+                            getirin; bu sayede süre bittiğinde alarm sesinden haberdar olabilirsiniz.</li>
+                        <li>⚠️ <strong>Çoklu Sahne Kullanımı:</strong> Zamanlayıcıyı OBS'te birden fazla sahnede
+                            kullanacaksanız, sahneler arası geçişte sürenin sıfırlanmaması ve çakışma olmaması için
+                            diğer sahnelere eklerken sıfırdan yeni kaynak açmak yerine mutlaka <strong>"Var Olanı Ekle"
+                                (Add Existing)</strong> seçeneği ile tek bir kaynak olarak ekleyin.</li>
                         <li>Genişlik: 800, Yükseklik: 300 tavsiye edilir.</li>
                     </ul>
                 </div>
             </div>
 
-            <button onclick="location.reload()" class="w-full mt-6 bg-transparent border border-gray-500 hover:bg-gray-800 text-white font-bold py-2 rounded-lg transition-colors">Yeni Zamanlayıcı Oluştur</button>
+            <button onclick="location.reload()"
+                class="w-full mt-6 bg-transparent border border-gray-500 hover:bg-gray-800 text-white font-bold py-2 rounded-lg transition-colors">Yeni
+                Zamanlayıcı Oluştur</button>
         </div>
 
-        <div class="mt-8 text-center text-xs text-white font-medium tracking-wide relative z-10 space-y-1 border-t border-white/10 pt-4">
-            <p>İletişim: <a href="mailto:crosweq204@gmail.com" class="text-blue-400 hover:text-blue-300 underline transition-colors">crosweq204@gmail.com</a></p>
+        <div
+            class="mt-8 text-center text-xs text-white font-medium tracking-wide relative z-10 space-y-1 border-t border-white/10 pt-4">
+            <p>İletişim: <a href="mailto:crosweq204@gmail.com"
+                    class="text-blue-400 hover:text-blue-300 underline transition-colors">crosweq204@gmail.com</a></p>
             <p class="text-gray-400">CrossWeq tarafından geliştirilmiştir.</p>
         </div>
 
     </div>
 
     <!-- Kick Timer Rehber / Yardım Modalı -->
-    <div id="helpModal" onclick="if(event.target === this) toggleHelpModal()" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-gray-900 border border-green-500/40 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative shadow-2xl">
-            <button type="button" onclick="toggleHelpModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors p-1">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    <div id="helpModal" onclick="if(event.target === this) toggleHelpModal()"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div
+            class="bg-gray-900 border border-green-500/40 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative shadow-2xl">
+            <button type="button" onclick="toggleHelpModal()"
+                class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
             </button>
             <div class="flex items-center gap-3 mb-4 border-b border-gray-800 pb-3">
                 <span class="text-3xl">⏱️</span>
                 <div>
                     <h2 class="text-2xl font-bold text-green-400">Kick Timer Nedir & Nasıl Kurulur?</h2>
-                    <p class="text-xs text-gray-400">OBS için geliştirilmiş komut ve sadakat puanı tetiklemeli akıllı zamanlayıcı</p>
+                    <p class="text-xs text-gray-400">OBS için geliştirilmiş komut ve sadakat puanı tetiklemeli akıllı
+                        zamanlayıcı</p>
                 </div>
             </div>
 
@@ -203,64 +264,92 @@
                 <!-- 1. Kanal Doğrulaması -->
                 <div class="bg-black/30 border border-gray-800 rounded-xl p-4">
                     <h3 class="text-base font-bold text-green-300 flex items-center gap-2 mb-1.5">
-                        <span class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 inline-flex items-center justify-center text-xs font-bold">1</span>
+                        <span
+                            class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 inline-flex items-center justify-center text-xs font-bold">1</span>
                         Kanal Doğrulaması
                     </h3>
                     <p class="text-gray-300">
-                        Kick kullanıcı adınızı girin. Sistem kanalınızı başarıyla doğruladıktan sonra <strong>Devam Et</strong> butonuna tıklayarak sonraki aşamaya geçin.
+                        Kick kullanıcı adınızı girin. Sistem kanalınızı başarıyla doğruladıktan sonra <strong>Devam
+                            Et</strong> butonuna tıklayarak sonraki aşamaya geçin.
                     </p>
                 </div>
 
                 <!-- 2. Komut ve Yetki Ayarları -->
                 <div class="bg-black/30 border border-gray-800 rounded-xl p-4">
                     <h3 class="text-base font-bold text-green-300 flex items-center gap-2 mb-1.5">
-                        <span class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 inline-flex items-center justify-center text-xs font-bold">2</span>
+                        <span
+                            class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 inline-flex items-center justify-center text-xs font-bold">2</span>
                         Komut ve Yetki Ayarları
                     </h3>
-                    <p class="text-gray-300 mb-2">Sayacı yönetecek komutları ve bu komutları kimlerin kullanabileceğini belirleyin:</p>
+                    <p class="text-gray-300 mb-2">Sayacı yönetecek komutları ve bu komutları kimlerin kullanabileceğini
+                        belirleyin:</p>
                     <ul class="space-y-1.5 list-disc pl-5 text-gray-300">
-                        <li><strong>Yetkili Kişiler:</strong> Chate komut yazarak süreye ekleme yapabilecek kişileri seçin. <em>(Öneri: Güvenlik için sadece yayıncının kendisini ve botrix'i yetkilendirmeniz tavsiye edilir. Gerekirse güvenilir moderatörlerinizi de ekleyebilirsiniz.)</em></li>
-                        <li><strong>Tetikleyici Kelime:</strong> Sayacı çalıştıracak komutu belirleyin <em>(Varsayılan olarak <code>!sus</code> şeklindedir, isteğinize göre değiştirebilirsiniz)</em>.</li>
-                        <li><strong>Eklenecek Süre (Dakika):</strong> Komut sade yazıldığında sayaca eklenecek varsayılan süredir.</li>
-                        <li><strong>✨ Dinamik Süre Ekleme (Yeni):</strong> Komutun yanına boşluk bırakıp sayı yazarak istediğiniz dakikayı ekleyebilirsiniz! Örneğin: <code>!sus 20</code> yazarsanız sayaca doğrudan <strong>20 dakika</strong>, <code>!sus 12</code> yazarsanız <strong>12 dakika</strong> eklenir. Yanına sayı yazmadan sadece <code>!sus</code> yazıldığında ise yukarıda belirlediğiniz varsayılan süre eklenir.</li>
+                        <li><strong>Yetkili Kişiler:</strong> Chate komut yazarak süreye ekleme yapabilecek kişileri
+                            seçin. <em>(Öneri: Güvenlik için sadece yayıncının kendisini ve botrix'i yetkilendirmeniz
+                                tavsiye edilir. Gerekirse güvenilir moderatörlerinizi de ekleyebilirsiniz.)</em></li>
+                        <li><strong>Tetikleyici Kelime:</strong> Sayacı çalıştıracak komutu belirleyin <em>(Varsayılan
+                                olarak <code>!sus</code> şeklindedir, isteğinize göre değiştirebilirsiniz)</em>.</li>
+                        <li><strong>Eklenecek Süre (Dakika):</strong> Komut sade yazıldığında sayaca eklenecek
+                            varsayılan süredir.</li>
+                        <li><strong>Dinamik Süre Ekleme:</strong> Komutun yanına boşluk bırakıp sayı yazarak istediğiniz
+                            dakikayı ekleyebilirsiniz! Örneğin: <code>!sus 20</code> yazarsanız sayaca doğrudan
+                            <strong>20 dakika</strong>, <code>!sus 12</code> yazarsanız <strong>12 dakika</strong>
+                            eklenir. Yanına sayı yazmadan sadece <code>!sus</code> yazıldığında ise yukarıda
+                            belirlediğiniz varsayılan süre eklenir.</li>
                     </ul>
-                    <p class="text-xs text-gray-400 mt-2">Ayarları tamamladıktan sonra <strong>Devam Et</strong> butonuna tıklayın.</p>
+                    <p class="text-xs text-gray-400 mt-2">Ayarları tamamladıktan sonra <strong>Devam Et</strong>
+                        butonuna tıklayın.</p>
                 </div>
 
                 <!-- 3. Tasarım Ayarları -->
                 <div class="bg-black/30 border border-gray-800 rounded-xl p-4">
                     <h3 class="text-base font-bold text-green-300 flex items-center gap-2 mb-1.5">
-                        <span class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 inline-flex items-center justify-center text-xs font-bold">3</span>
+                        <span
+                            class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 inline-flex items-center justify-center text-xs font-bold">3</span>
                         Tasarım Ayarları
                     </h3>
                     <p class="text-gray-300 mb-2">Sayacınızın yayındaki görünümünü özelleştirin:</p>
                     <ul class="space-y-1.5 list-disc pl-5 text-gray-300">
-                        <li><strong>Sayaç Üstü Metni:</strong> Sayacın hemen üzerinde görünecek bilgilendirme yazısını belirleyin (Örn: <em>Konuşma yasağının bitmesine</em>).</li>
-                        <li><strong>Görünüm:</strong> Font (yazı tipi), renk ve saydamlık (transparanlık) ayarlarını temanıza göre yapın.</li>
-                        <li><strong>Çerçeve (Stroke):</strong> Yazıların daha okunaklı olması için metin dışına siyah çerçeve ekleme seçeneğini açıp kapatabilirsiniz.</li>
+                        <li><strong>Sayaç Üstü Metni:</strong> Sayacın hemen üzerinde görünecek bilgilendirme yazısını
+                            belirleyin (Örn: <em>Konuşma yasağının bitmesine</em>).</li>
+                        <li><strong>Görünüm:</strong> Font (yazı tipi), renk ve saydamlık (transparanlık) ayarlarını
+                            temanıza göre yapın.</li>
+                        <li><strong>Çerçeve (Stroke):</strong> Yazıların daha okunaklı olması için metin dışına siyah
+                            çerçeve ekleme seçeneğini açıp kapatabilirsiniz.</li>
                     </ul>
-                    <p class="text-xs text-gray-400 mt-2">Tasarımınız hazır olduğunda <strong>Bağlantı Oluştur</strong> butonuna tıklayın ve ekranda beliren linki kopyalayın.</p>
+                    <p class="text-xs text-gray-400 mt-2">Tasarımınız hazır olduğunda <strong>Bağlantı Oluştur</strong>
+                        butonuna tıklayın ve ekranda beliren linki kopyalayın.</p>
                 </div>
 
                 <!-- 4. OBS'e Ekleme -->
                 <div class="bg-black/30 border border-blue-500/30 rounded-xl p-4">
                     <h3 class="text-base font-bold text-blue-300 flex items-center gap-2 mb-1.5">
-                        <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 inline-flex items-center justify-center text-xs font-bold">4</span>
+                        <span
+                            class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 inline-flex items-center justify-center text-xs font-bold">4</span>
                         OBS'e Ekleme
                     </h3>
-                    <p class="text-gray-300 mb-2">Kopyaladığınız bağlantıyı OBS'te yeni bir <strong>Tarayıcı (Browser)</strong> kaynağı oluşturarak URL kısmına yapıştırın.</p>
+                    <p class="text-gray-300 mb-2">Kopyaladığınız bağlantıyı OBS'te yeni bir <strong>Tarayıcı
+                            (Browser)</strong> kaynağı oluşturarak URL kısmına yapıştırın.</p>
                     <ul class="space-y-1.5 list-disc pl-5 text-gray-300 mb-3">
-                        <li><strong>Önerilen Boyutlar:</strong> Genişlik 800, Yükseklik 300 <em>(Zorunlu değildir, sahnenize göre değiştirebilirsiniz)</em>.</li>
-                        <li><strong>Çoklu Sahne Kullanımı (Önemli):</strong> Zamanlayıcıyı birden fazla sahnede kullanacaksanız, sahneler arası geçiş yaparken sürenin kopmaması veya sıfırlanmaması için diğer sahnelere yeni kaynak açmak yerine her zaman <strong>"Var Olanı Ekle" (Add Existing)</strong> diyerek tek bir kaynak olarak ekleyin.</li>
+                        <li><strong>Önerilen Boyutlar:</strong> Genişlik 800, Yükseklik 300 <em>(Zorunlu değildir,
+                                sahnenize göre değiştirebilirsiniz)</em>.</li>
+                        <li><strong>Çoklu Sahne Kullanımı (Önemli):</strong> Zamanlayıcıyı birden fazla sahnede
+                            kullanacaksanız, sahneler arası geçiş yaparken sürenin kopmaması veya sıfırlanmaması için
+                            diğer sahnelere yeni kaynak açmak yerine her zaman <strong>"Var Olanı Ekle" (Add
+                                Existing)</strong> diyerek tek bir kaynak olarak ekleyin.</li>
                     </ul>
-                    <div class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-200 text-xs p-3 rounded-lg flex items-start gap-2 space-y-1 flex-col">
+                    <div
+                        class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-200 text-xs p-3 rounded-lg flex items-start gap-2 space-y-1 flex-col">
                         <div class="flex items-center gap-2 font-bold text-yellow-300">
                             <span class="text-base leading-none">⚠️</span>
                             <span>ÖNEMLİ SES AYARLARI:</span>
                         </div>
                         <ul class="list-disc pl-5 space-y-1 text-gray-300">
-                            <li>Kaynağı eklerken <strong>"Sesi OBS üzerinden kontrol et" (Control audio via OBS)</strong> seçeneğini <strong>KESİNLİKLE</strong> işaretleyin.</li>
-                            <li>Ardından OBS Ses Karıştırıcısı'nda kaynak adının yanındaki <strong>Kulaklık sembolünü açık</strong> (Ses İzleme) durumuna getirin. Bu sayede süre bittiğinde çalacak alarm sesini hem siz duyabilir hem de yayına iletebilirsiniz.</li>
+                            <li>Kaynağı eklerken <strong>"Sesi OBS üzerinden kontrol et" (Control audio via
+                                    OBS)</strong> seçeneğini <strong>KESİNLİKLE</strong> işaretleyin.</li>
+                            <li>Ardından OBS Ses Karıştırıcısı'nda kaynak adının yanındaki <strong>Kulaklık sembolünü
+                                    açık</strong> (Ses İzleme) durumuna getirin. Bu sayede süre bittiğinde çalacak alarm
+                                sesini hem siz duyabilir hem de yayına iletebilirsiniz.</li>
                         </ul>
                     </div>
                 </div>
@@ -268,22 +357,33 @@
                 <!-- 5. Botrix ile Sadakat Puanı Entegrasyonu -->
                 <div class="bg-black/30 border border-purple-500/30 rounded-xl p-4">
                     <h3 class="text-base font-bold text-purple-300 flex items-center gap-2 mb-1.5">
-                        <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 inline-flex items-center justify-center text-xs font-bold">5</span>
+                        <span
+                            class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 inline-flex items-center justify-center text-xs font-bold">5</span>
                         Botrix ile Sadakat Puanı Entegrasyonu
                     </h3>
-                    <p class="text-gray-300 mb-2"><em>(Sadakat ödülleri ile otomatik çalıştırmak isteyenler için)</em> Sayacınızı izleyicilerin sadakat puanı (kanal puanı) ile aldıkları bir hediye üzerinden otomatik tetiklemek için:</p>
+                    <p class="text-gray-300 mb-2"><em>(Sadakat ödülleri ile otomatik çalıştırmak isteyenler için)</em>
+                        Sayacınızı izleyicilerin sadakat puanı (kanal puanı) ile aldıkları bir hediye üzerinden otomatik
+                        tetiklemek için:</p>
                     <ol class="space-y-1.5 list-decimal pl-5 text-gray-300">
-                        <li><strong>Botrix paneline</strong> gidin ve <strong>Sadakat (Loyalty)</strong> sekmesini açın.</li>
-                        <li>Kick sadakat puanları kısmından istediğiniz ödülü seçin veya sayaca özel yeni bir ödül oluşturun.</li>
-                        <li>Ödül ayarlarına girerek, bu ödül kullanıldığında Botrix'in chate sizin belirlediğiniz komutu (örn: <code>!sus</code>, <code>!sus 5</code> veya <code>!sus 20</code>) sohbet mesajı olarak yazmasını sağlayın. Bu sayede farklı puan değerlerine sahip farklı sürelerde ödüller tanımlayabilirsiniz.</li>
+                        <li><strong>Botrix paneline</strong> gidin ve <strong>Sadakat (Loyalty)</strong> sekmesini açın.
+                        </li>
+                        <li>Kick sadakat puanları kısmından istediğiniz ödülü seçin veya sayaca özel yeni bir ödül
+                            oluşturun.</li>
+                        <li>Ödül ayarlarına girerek, bu ödül kullanıldığında Botrix'in chate sizin belirlediğiniz komutu
+                            (örn: <code>!sus</code>, <code>!sus 5</code> veya <code>!sus 20</code>) sohbet mesajı olarak
+                            yazmasını sağlayın. Bu sayede farklı puan değerlerine sahip farklı sürelerde ödüller
+                            tanımlayabilirsiniz.</li>
                     </ol>
-                    <div class="bg-purple-500/10 border border-purple-500/30 text-purple-200 text-xs p-2.5 rounded-lg mt-3 flex items-start gap-2">
-                        <span><strong>İpucu:</strong> Sayacın başladığını yayın sırasında anında fark etmek için, aynı ödülün Botrix ayarlarına uyarıcı bir ses efekti de ekleyebilirsiniz.</span>
+                    <div
+                        class="bg-purple-500/10 border border-purple-500/30 text-purple-200 text-xs p-2.5 rounded-lg mt-3 flex items-start gap-2">
+                        <span><strong>İpucu:</strong> Sayacın başladığını yayın sırasında anında fark etmek için, aynı
+                            ödülün Botrix ayarlarına uyarıcı bir ses efekti de ekleyebilirsiniz.</span>
                     </div>
                 </div>
             </div>
 
-            <button type="button" onclick="toggleHelpModal()" class="w-full mt-6 bg-green-500 hover:bg-green-600 text-black font-bold py-2.5 rounded-xl transition-colors">
+            <button type="button" onclick="toggleHelpModal()"
+                class="w-full mt-6 bg-green-500 hover:bg-green-600 text-black font-bold py-2.5 rounded-xl transition-colors">
                 Anladım, Kapat
             </button>
         </div>
@@ -314,7 +414,7 @@
 
         function nextStep(step) {
             showStep(step);
-            if(step === 3) updatePreview();
+            if (step === 3) updatePreview();
         }
 
         function prevStep(step) {
@@ -435,7 +535,7 @@
             const font = document.getElementById('fontInput').value;
             const opacity = document.getElementById('opacityInput').value;
             document.getElementById('opacityValue').textContent = Math.round(opacity * 100) + '%';
-            
+
             const previewContainer = document.getElementById('previewContainer');
             previewContainer.style.opacity = opacity;
             const color = document.getElementById('colorInput').value;
@@ -448,12 +548,12 @@
             previewTopText.textContent = topText;
             previewContainer.style.fontFamily = font;
             previewContainer.style.color = color;
-            
+
             if (font.includes('Press Start 2P')) {
                 previewTopText.style.fontSize = '0.5rem';
                 previewTimer.style.fontSize = '1.5rem';
             } else {
-                previewTopText.style.fontSize = '1.25rem'; 
+                previewTopText.style.fontSize = '1.25rem';
                 previewTimer.style.fontSize = '3rem';
             }
             if (hasBorder) {
@@ -468,7 +568,7 @@
             let trigger = document.getElementById('triggerInput').value.trim();
             const allowed = document.getElementById('allowedUsersInput').value.trim();
             const duration = document.getElementById('durationInput').value;
-            if(!trigger) { alert('Lütfen tetikleyici komutu girin!'); prevStep(2); return; }
+            if (!trigger) { alert('Lütfen tetikleyici komutu girin!'); prevStep(2); return; }
             if (!trigger.startsWith('!')) {
                 trigger = '!' + trigger;
                 document.getElementById('triggerInput').value = trigger;
@@ -519,7 +619,7 @@
             }
         }
 
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 const modal = document.getElementById('helpModal');
                 if (!modal.classList.contains('hidden')) {
@@ -529,4 +629,5 @@
         });
     </script>
 </body>
+
 </html>
