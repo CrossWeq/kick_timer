@@ -25,7 +25,7 @@ Sayacı yönetecek komutları ve bu komutları kimlerin kullanabileceğini belir
   *(Öneri: Güvenlik için sadece yayıncının kendisini ve botrix'i yetkilendirmeniz tavsiye edilir. Gerekirse güvenilir moderatörlerinizi de ekleyebilirsiniz.)*
 - **Tetikleyici Kelime:** Sayacı çalıştıracak komutu belirleyin *(Varsayılan olarak `!sus` şeklindedir, isteğinize göre değiştirebilirsiniz)*.
 - **Varsayılan Eklenecek Süre (Dakika):** Komut sade yazıldığında sayaca eklenecek süredir.
-- **✨ Dinamik Süre Ekleme (Örn: `!sus 20` / `!sus 12`):** Komuttan sonra boşluk bırakıp herhangi bir sayı yazarak istenen dakika doğrudan eklenebilir:
+- **Dinamik Süre Ekleme (Örn: `!sus 20` / `!sus 12`):** Komuttan sonra boşluk bırakıp herhangi bir sayı yazarak istenen dakika doğrudan eklenebilir:
   - `!sus` ➔ Panelde belirlediğiniz varsayılan süre (örn: 1 dakika) eklenir.
   - `!sus 20` ➔ Sayaca doğrudan **20 dakika** eklenir.
   - `!sus 12` ➔ Sayaca doğrudan **12 dakika** eklenir.  
