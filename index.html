@@ -168,12 +168,18 @@
                     <p class="font-semibold mb-1">Önemli OBS Ayarları:</p>
                     <ul class="list-disc pl-4 space-y-1">
                         <li>OBS'te kaynağı eklerken <strong>"Sesi OBS üzerinden kontrol et"</strong> (Control audio via OBS) seçeneğini kesinlikle işaretleyin.</li>
+                        <li>Ardından OBS Ses Karıştırıcısı'nda kaynağın yanındaki <strong>Kulaklık sembolünü açık</strong> (veya Gelişmiş Ses Özellikleri'nden <em>"Yenileme ve Çıkış"</em>) durumuna getirin; bu sayede süre bittiğinde alarm sesinden haberdar olabilirsiniz.</li>
                         <li>Genişlik: 800, Yükseklik: 300 tavsiye edilir.</li>
                     </ul>
                 </div>
             </div>
 
             <button onclick="location.reload()" class="w-full mt-6 bg-transparent border border-gray-500 hover:bg-gray-800 text-white font-bold py-2 rounded-lg transition-colors">Yeni Zamanlayıcı Oluştur</button>
+        </div>
+
+        <div class="mt-8 text-center text-xs text-white font-medium tracking-wide relative z-10 space-y-1 border-t border-white/10 pt-4">
+            <p>İletişim: <a href="mailto:crosweq204@gmail.com" class="text-blue-400 hover:text-blue-300 underline transition-colors">crosweq204@gmail.com</a></p>
+            <p class="text-gray-400">CrossWeq tarafından geliştirilmiştir.</p>
         </div>
 
     </div>
@@ -244,9 +250,15 @@
                     <ul class="space-y-1.5 list-disc pl-5 text-gray-300 mb-3">
                         <li><strong>Önerilen Boyutlar:</strong> Genişlik 800, Yükseklik 300 <em>(Zorunlu değildir, sahnenize göre değiştirebilirsiniz)</em>.</li>
                     </ul>
-                    <div class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-200 text-xs p-3 rounded-lg flex items-start gap-2">
-                        <span class="text-base leading-none">⚠️</span>
-                        <span><strong>ÖNEMLİ:</strong> Kaynağı eklerken <strong>"Sesi OBS üzerinden kontrol et" (Control audio via OBS)</strong> seçeneğini <strong>KESİNLİKLE</strong> işaretleyin. Aksi takdirde, süre bitiminde çalacak olan alarm sesini yayına ve kulaklığınıza iletemezsiniz.</span>
+                    <div class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-200 text-xs p-3 rounded-lg flex items-start gap-2 space-y-1 flex-col">
+                        <div class="flex items-center gap-2 font-bold text-yellow-300">
+                            <span class="text-base leading-none">⚠️</span>
+                            <span>ÖNEMLİ SES AYARLARI:</span>
+                        </div>
+                        <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                            <li>Kaynağı eklerken <strong>"Sesi OBS üzerinden kontrol et" (Control audio via OBS)</strong> seçeneğini <strong>KESİNLİKLE</strong> işaretleyin.</li>
+                            <li>Ardından OBS Ses Karıştırıcısı'nda kaynak adının yanındaki <strong>Kulaklık sembolünü açık</strong> (Ses İzleme) durumuna getirin. Bu sayede süre bittiğinde çalacak alarm sesini hem siz duyabilir hem de yayına iletebilirsiniz.</li>
+                        </ul>
                     </div>
                 </div>
 
