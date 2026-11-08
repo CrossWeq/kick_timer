@@ -36,7 +36,8 @@ Tasarımınız hazır olduğunda **Bağlantı Oluştur** butonuna tıklayın ve 
 ### 4. OBS'e Ekleme
 1. Kopyaladığınız bağlantıyı OBS'te yeni bir **Tarayıcı (Browser)** kaynağı oluşturarak URL kısmına yapıştırın.
 2. **Önerilen Boyutlar:** Genişlik 800, Yükseklik 300 *(Zorunlu değildir, sahnenize göre değiştirebilirsiniz)*.
-3. ⚠️ **ÖNEMLİ SES AYARLARI:**
+3. ⚠️ **Çoklu Sahne Kullanımı (Önemli):** Zamanlayıcıyı OBS'te birden fazla sahnede kullanacaksanız, sahneler arası geçiş yaparken sayacın sıfırlanmaması ve sürenin kesintisiz akması için diğer sahnelere yeni kaynak açmak yerine her zaman **"Var Olanı Ekle" (Add Existing)** seçeneği ile tek bir kaynak olarak ekleyin.
+4. ⚠️ **ÖNEMLİ SES AYARLARI:**
    - Kaynağı eklerken **"Sesi OBS üzerinden kontrol et" (Control audio via OBS)** seçeneğini **KESİNLİKLE** işaretleyin.
    - Ardından OBS **Ses Karıştırıcısı** panelinde bu kaynağın yanındaki **Kulaklık sembolünü açık** (Ses İzleme) durumuna getirin (veya Gelişmiş Ses Özellikleri'nden *"İzleme ve Çıkış"* seçin). Bu sayede süre bittiğinde çalacak olan alarm sesinden siz de anında haberdar olabilirsiniz.
 
