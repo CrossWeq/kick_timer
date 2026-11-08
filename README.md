@@ -1,5 +1,7 @@
 # Kick Timer Overlay
 
+🔗 **Kurulum linki:** https://crossweq.github.io/kick_timer/
+
 OBS için özel olarak tasarlanmış, **Kick** yayıncılarına yönelik sohbet komutları (örn: `!sus`) ve sadakat ödülleri ile tetiklenen süre eklemeli zamanlayıcı (Timer) overlay projesi.
 
 ## Özellikler
@@ -34,7 +36,9 @@ Tasarımınız hazır olduğunda **Bağlantı Oluştur** butonuna tıklayın ve 
 ### 4. OBS'e Ekleme
 1. Kopyaladığınız bağlantıyı OBS'te yeni bir **Tarayıcı (Browser)** kaynağı oluşturarak URL kısmına yapıştırın.
 2. **Önerilen Boyutlar:** Genişlik 800, Yükseklik 300 *(Zorunlu değildir, sahnenize göre değiştirebilirsiniz)*.
-3. ⚠️ **ÖNEMLİ:** Kaynağı eklerken **"Sesi OBS üzerinden kontrol et" (Control audio via OBS)** seçeneğini **KESİNLİKLE** işaretleyin. Aksi takdirde, süre bitiminde çalacak olan alarm sesini yayına ve kulaklığınıza iletemezsiniz.
+3. ⚠️ **ÖNEMLİ SES AYARLARI:**
+   - Kaynağı eklerken **"Sesi OBS üzerinden kontrol et" (Control audio via OBS)** seçeneğini **KESİNLİKLE** işaretleyin.
+   - Ardından OBS **Ses Karıştırıcısı** panelinde bu kaynağın yanındaki **Kulaklık sembolünü açık** (Ses İzleme) durumuna getirin (veya Gelişmiş Ses Özellikleri'nden *"İzleme ve Çıkış"* seçin). Bu sayede süre bittiğinde çalacak olan alarm sesinden siz de anında haberdar olabilirsiniz.
 
 ### 5. Botrix ile Sadakat Puanı Entegrasyonu
 *(Sadakat ödülleri ile otomatik çalıştırmak isteyenler için)*  
@@ -43,6 +47,13 @@ Sayacınızı izleyicilerin sadakat puanı (kanal puanı) ile aldıkları bir he
 2. Kick sadakat puanları kısmından istediğiniz ödülü seçin veya sayaca özel yeni bir ödül oluşturun.
 3. Ödül ayarlarına girerek, bu ödül kullanıldığında Botrix'in chate sizin belirlediğiniz tetikleyici komutu (örn: `!sus`) sohbet mesajı olarak yazmasını sağlayın.
 4. 💡 **İpucu:** Sayacın başladığını yayın sırasında anında fark etmek için, aynı ödülün Botrix ayarlarına uyarıcı bir ses efekti de ekleyebilirsiniz.
+
+---
+
+## 💻 Geliştirici / Developer
+Developed with ❤️ by **CrossWeq**
+
+İletişim / Contact: [crosweq204@gmail.com](mailto:crosweq204@gmail.com)
 
 ---
 
