@@ -7,7 +7,8 @@ OBS için özel olarak tasarlanmış, **Kick** yayıncılarına yönelik sohbet 
 ## Özellikler
 - **Kolay Kurulum Paneli (index.html):** Modern arayüzlü yapılandırma sayfası ile Kick kanal adınızı doğrulayabilir; yetkili kişileri, tetikleyici komutu, renkleri, fontları, saydamlık ve çerçeve özelliklerini canlı önizleme (Live Preview) ile ayarlayabilirsiniz.
 - **Sohbet Komutu ile Kontrol (Pusher JS):** Cloudflare Worker köprüsü ve Kick resmi webhook altyapısı sayesinde sadece izin verdiğiniz kişilerin yazdığı `!` komutları işlenir.
-- **Botrix & Sadakat Puanı Uyumu:** Kanal puanı hediyeleriyle tetikleme yapılabilir (izleyici ödülü aldığında Botrix chate komutu atar, sayaç otomatik başlar).
+- **✨ Dinamik Süre Ekleme (Örn: `!sus 20` / `!sus 12`):** Komuttan sonra boşluk bırakıp bir sayı yazarak (örn: `!sus 20` veya `!sus 12`) tek seferde doğrudan belirtilen dakika kadar süre ekleyebilirsiniz. Sayı yazılmazsa panelde ayarlanan varsayılan süre eklenir.
+- **Botrix & Sadakat Puanı Uyumu:** Kanal puanı hediyeleriyle tetikleme yapılabilir (izleyici ödülü aldığında Botrix chate komutu atar, sayaç otomatik başlar). Farklı puanlar için farklı süreler (örn: `!sus 5`, `!sus 20`) tanımlanabilir.
 - **Otomatik Süre Ekleme ve Parlama Efekti:** İzin verilen bir kişi komutu yazdığında mevcut süreye ekleme yapılır ve sayaç belirlediğiniz renkte parlar.
 - **Sesli Uyarı Sistemi:** Sayaç süresi tamamen bittiğinde otomatik olarak uyarıcı bir zil/bip sesi çalar.
 
@@ -23,7 +24,11 @@ Sayacı yönetecek komutları ve bu komutları kimlerin kullanabileceğini belir
 - **Yetkili Kişiler:** Chate komut yazarak süreye ekleme yapabilecek kişileri seçin.  
   *(Öneri: Güvenlik için sadece yayıncının kendisini ve botrix'i yetkilendirmeniz tavsiye edilir. Gerekirse güvenilir moderatörlerinizi de ekleyebilirsiniz.)*
 - **Tetikleyici Kelime:** Sayacı çalıştıracak komutu belirleyin *(Varsayılan olarak `!sus` şeklindedir, isteğinize göre değiştirebilirsiniz)*.
-- **Eklenecek Süre (Dakika):** Komut her yazıldığında sayaca kaç dakika ekleneceğini ayarlayın.  
+- **Varsayılan Eklenecek Süre (Dakika):** Komut sade yazıldığında sayaca eklenecek süredir.
+- **✨ Dinamik Süre Ekleme (Örn: `!sus 20` / `!sus 12`):** Komuttan sonra boşluk bırakıp herhangi bir sayı yazarak istenen dakika doğrudan eklenebilir:
+  - `!sus` ➔ Panelde belirlediğiniz varsayılan süre (örn: 1 dakika) eklenir.
+  - `!sus 20` ➔ Sayaca doğrudan **20 dakika** eklenir.
+  - `!sus 12` ➔ Sayaca doğrudan **12 dakika** eklenir.  
 Ayarları tamamladıktan sonra **Devam Et** butonuna tıklayın.
 
 ### 3. Tasarım Ayarları
@@ -46,8 +51,8 @@ Tasarımınız hazır olduğunda **Bağlantı Oluştur** butonuna tıklayın ve 
 Sayacınızı izleyicilerin sadakat puanı (kanal puanı) ile aldıkları bir hediye üzerinden otomatik tetiklemek için:
 1. **Botrix paneline** gidin ve **Sadakat (Loyalty)** sekmesini açın.
 2. Kick sadakat puanları kısmından istediğiniz ödülü seçin veya sayaca özel yeni bir ödül oluşturun.
-3. Ödül ayarlarına girerek, bu ödül kullanıldığında Botrix'in chate sizin belirlediğiniz tetikleyici komutu (örn: `!sus`) sohbet mesajı olarak yazmasını sağlayın.
-4. 💡 **İpucu:** Sayacın başladığını yayın sırasında anında fark etmek için, aynı ödülün Botrix ayarlarına uyarıcı bir ses efekti de ekleyebilirsiniz.
+3. Ödül ayarlarına girerek, bu ödül kullanıldığında Botrix'in chate sizin belirlediğiniz komutu (örn: `!sus`, `!sus 5` veya `!sus 20`) sohbet mesajı olarak yazmasını sağlayın. Bu sayede farklı kanal puanı bedelleri için farklı süreli ödüller tanımlayabilirsiniz.
+4. **İpucu:** Sayacın başladığını yayın sırasında anında fark etmek için, aynı ödülün Botrix ayarlarına uyarıcı bir ses efekti de ekleyebilirsiniz.
 
 ---
 

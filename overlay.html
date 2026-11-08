@@ -66,8 +66,12 @@
         const allowedUsers = allowedParam
             ? allowedParam.toLowerCase().split(',').map(s => s.trim().replace(/^@+/, '')).filter(s => s)
             : [];
-        const triggerWord = params.get('trigger') ? params.get('trigger').trim().toLowerCase() : '';
-        const durationMinutes = parseInt(params.get('duration')) || 1;
+        let rawTrigger = (params.get('trigger') || '!sus').trim().toLowerCase();
+        if (rawTrigger && !rawTrigger.startsWith('!') && !rawTrigger.startsWith('/')) {
+            rawTrigger = '!' + rawTrigger;
+        }
+        const triggerWord = rawTrigger;
+        const durationMinutes = Math.max(1, parseInt(params.get('duration')) || 1);
         const topText = params.get('text') || '';
         const fontFamily = params.get('font') || "'Fredoka', sans-serif";
         const targetOpacity = Math.min(1, Math.max(0.1, parseFloat(params.get('opacity')) || 1));
@@ -164,8 +168,12 @@
             document.getElementById('time-display').textContent = formatTime(remainingSeconds);
         }
 
-        function triggerAddDuration() {
-            const addSeconds = durationMinutes * 60;
+        function triggerAddDuration(customMinutes) {
+            let minutesToAdd = durationMinutes;
+            if (typeof customMinutes === 'number' && !isNaN(customMinutes) && customMinutes > 0) {
+                minutesToAdd = customMinutes;
+            }
+            const addSeconds = Math.round(minutesToAdd * 60);
             
             if (remainingSeconds <= 0) {
                 // Zamanlayıcı görünür yap, süreyi başlat
@@ -186,6 +194,9 @@
                 container.classList.add('animate-add');
             }
         }
+
+        // Test amaçlı konsoldan çalıştırmak için: örn window.testAdd(20) veya window.testAdd()
+        window.testAdd = (mins) => triggerAddDuration(mins);
 
         function startTimer() {
             if (timerInterval) clearInterval(timerInterval);
@@ -323,10 +334,24 @@
 
                     if (!isUserAllowed(senderUsername, senderSlug)) return;
 
-                    // 3. Mesaj tetikleyici komutu içeriyorsa süreyi ekle
-                    if (content.includes(triggerWord)) {
-                        console.log(`[KickTimer] Tetiklendi! Gönderen: ${senderUsername}, Mesaj: ${content}`);
-                        triggerAddDuration();
+                    // 3. Mesaj tetikleyici komut ile eşleşiyorsa süreyi ekle
+                    // Örn: !sus (varsayılan süre) veya !sus 20 (20 dakika), !sus 12 (12 dakika)
+                    const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const escapedTrigger = escapeRegExp(triggerWord);
+                    const cmdRegex = new RegExp('^' + escapedTrigger + '(?:\\s+(\\d+(?:[.,]\\d+)?))?(?:\\s|$)', 'i');
+                    const match = content.match(cmdRegex);
+
+                    if (match) {
+                        let customMinutes = undefined;
+                        if (match[1]) {
+                            const parsed = parseFloat(match[1].replace(',', '.'));
+                            if (!isNaN(parsed) && parsed > 0) {
+                                customMinutes = parsed;
+                            }
+                        }
+                        const addedMins = customMinutes !== undefined ? customMinutes : durationMinutes;
+                        console.log(`[KickTimer] Tetiklendi! Gönderen: ${senderUsername}, Mesaj: ${content}, Eklenecek: ${addedMins} dk`);
+                        triggerAddDuration(customMinutes);
                     }
                 } catch (e) {
                     console.error('[KickTimer] Mesaj işleme hatası:', e);

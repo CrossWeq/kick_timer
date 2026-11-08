@@ -51,7 +51,6 @@
             <h1 class="text-3xl font-bold text-green-400 mb-2">Kick Timer Overlay</h1>
             <p class="text-gray-300 text-sm mb-4">OBS için sohbet komutuyla çalışan modüler zamanlayıcı</p>
             <button type="button" onclick="toggleHelpModal()" class="inline-flex items-center gap-2 bg-green-500/15 hover:bg-green-500/25 border border-green-500/40 text-green-300 text-xs sm:text-sm font-semibold py-2 px-4 rounded-xl transition-all shadow-md hover:scale-[1.02]">
-                <span class="text-base">💡</span>
                 <span>Kick Timer Nedir & Nasıl Kurulur?</span>
             </button>
         </div>
@@ -81,11 +80,12 @@
             <div class="mb-4">
                 <label class="block text-sm text-gray-300 mb-2">Tetikleyici Komut</label>
                 <input type="text" id="triggerInput" value="!sus" placeholder="Örn: !sus" class="w-full p-3 rounded-lg input-field">
-                <p class="text-xs text-gray-400 mt-1">İzin verilen kişiler sohbette bu komutu (! ile başlayan) yazdığında süre eklenir.</p>
+                <p class="text-xs text-gray-400 mt-1">İzin verilen kişiler bu komutu yazdığında süre eklenir. Boşluk bırakıp sayı yazarak (örn: <code class="text-green-300 font-mono">!sus 20</code> veya <code class="text-green-300 font-mono">!sus 12</code>) doğrudan o kadar dakika ekleyebilirsiniz.</p>
             </div>
             <div class="mb-6">
-                <label class="block text-sm text-gray-300 mb-2">Eklenecek Süre (Dakika)</label>
+                <label class="block text-sm text-gray-300 mb-2">Varsayılan Eklenecek Süre (Dakika)</label>
                 <input type="number" id="durationInput" value="1" min="1" class="w-full p-3 rounded-lg input-field">
+                <p class="text-xs text-gray-400 mt-1">Komutun yanına sayı yazılmadığında (sadece <code>!sus</code> yazıldığında) eklenecek süredir.</p>
             </div>
             <div class="flex gap-4">
                 <button onclick="prevStep(1)" class="w-1/3 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-colors">Geri</button>
@@ -221,7 +221,8 @@
                     <ul class="space-y-1.5 list-disc pl-5 text-gray-300">
                         <li><strong>Yetkili Kişiler:</strong> Chate komut yazarak süreye ekleme yapabilecek kişileri seçin. <em>(Öneri: Güvenlik için sadece yayıncının kendisini ve botrix'i yetkilendirmeniz tavsiye edilir. Gerekirse güvenilir moderatörlerinizi de ekleyebilirsiniz.)</em></li>
                         <li><strong>Tetikleyici Kelime:</strong> Sayacı çalıştıracak komutu belirleyin <em>(Varsayılan olarak <code>!sus</code> şeklindedir, isteğinize göre değiştirebilirsiniz)</em>.</li>
-                        <li><strong>Eklenecek Süre (Dakika):</strong> Komut her yazıldığında sayaca kaç dakika ekleneceğini ayarlayın.</li>
+                        <li><strong>Eklenecek Süre (Dakika):</strong> Komut sade yazıldığında sayaca eklenecek varsayılan süredir.</li>
+                        <li><strong>✨ Dinamik Süre Ekleme (Yeni):</strong> Komutun yanına boşluk bırakıp sayı yazarak istediğiniz dakikayı ekleyebilirsiniz! Örneğin: <code>!sus 20</code> yazarsanız sayaca doğrudan <strong>20 dakika</strong>, <code>!sus 12</code> yazarsanız <strong>12 dakika</strong> eklenir. Yanına sayı yazmadan sadece <code>!sus</code> yazıldığında ise yukarıda belirlediğiniz varsayılan süre eklenir.</li>
                     </ul>
                     <p class="text-xs text-gray-400 mt-2">Ayarları tamamladıktan sonra <strong>Devam Et</strong> butonuna tıklayın.</p>
                 </div>
@@ -274,10 +275,9 @@
                     <ol class="space-y-1.5 list-decimal pl-5 text-gray-300">
                         <li><strong>Botrix paneline</strong> gidin ve <strong>Sadakat (Loyalty)</strong> sekmesini açın.</li>
                         <li>Kick sadakat puanları kısmından istediğiniz ödülü seçin veya sayaca özel yeni bir ödül oluşturun.</li>
-                        <li>Ödül ayarlarına girerek, bu ödül kullanıldığında Botrix'in chate sizin belirlediğiniz tetikleyici komutu (örn: <code>!sus</code>) sohbet mesajı olarak yazmasını sağlayın.</li>
+                        <li>Ödül ayarlarına girerek, bu ödül kullanıldığında Botrix'in chate sizin belirlediğiniz komutu (örn: <code>!sus</code>, <code>!sus 5</code> veya <code>!sus 20</code>) sohbet mesajı olarak yazmasını sağlayın. Bu sayede farklı puan değerlerine sahip farklı sürelerde ödüller tanımlayabilirsiniz.</li>
                     </ol>
                     <div class="bg-purple-500/10 border border-purple-500/30 text-purple-200 text-xs p-2.5 rounded-lg mt-3 flex items-start gap-2">
-                        <span class="text-base leading-none">💡</span>
                         <span><strong>İpucu:</strong> Sayacın başladığını yayın sırasında anında fark etmek için, aynı ödülün Botrix ayarlarına uyarıcı bir ses efekti de ekleyebilirsiniz.</span>
                     </div>
                 </div>
